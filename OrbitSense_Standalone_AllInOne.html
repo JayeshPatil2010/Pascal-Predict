@@ -1642,6 +1642,14 @@ body {
           <strong>Satellites & Sensors</strong>, <strong>Climate Processes</strong>, <strong>EMR Physics & Spectroscopy</strong>, and <strong>Quantitative Calculations</strong>. 
           OrbitSense will profile your current state and construct an adaptive guided study track targeting your exact weaknesses.
         </p>
+        <div style="margin-top: 18px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="skipToGuidedLearning()">
+            🚀 Skip All Questions & Go Straight to Learning ➔
+          </button>
+          <span style="font-size: 13px; color: var(--text-muted);">
+            or take the diagnostic below to test your baseline state
+          </span>
+        </div>
       </div>
 
       <!-- Diagnostic In-Progress Card -->
@@ -1670,9 +1678,14 @@ body {
             <div class="feedback-tip" id="diag-feedback-tip">Competition Tip: ...</div>
           </div>
 
-          <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
-            <button class="btn btn-secondary btn-sm" id="diag-btn-hint" onclick="toggleDiagHint()">💡 Show Calculator / Strategy Tip</button>
-            <button class="btn btn-primary" id="diag-btn-next" onclick="nextDiagQuestion()" disabled>Next Question →</button>
+          <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <button class="btn btn-secondary btn-sm" onclick="skipToGuidedLearning()" style="color: var(--cyan); border-color: rgba(56, 189, 248, 0.4);">
+              ⏭️ Skip Diagnostic & Learn Directly ➔
+            </button>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-secondary btn-sm" id="diag-btn-hint" onclick="toggleDiagHint()">💡 Show Tip</button>
+              <button class="btn btn-primary" id="diag-btn-next" onclick="nextDiagQuestion()" disabled>Next Question →</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1769,13 +1782,19 @@ body {
         </p>
       </div>
 
-      <!-- Filter Controls -->
-      <div class="guided-filter-tabs">
-        <button class="filter-chip active" data-filter="all" onclick="filterGuidedModules('all', this)">All Modules (12)</button>
-        <button class="filter-chip" data-filter="weakness" id="guided-weakness-btn" onclick="filterGuidedModules('weakness', this)">🎯 My Diagnostic Weaknesses</button>
-        <button class="filter-chip" data-filter="Satellites & Sensors" onclick="filterGuidedModules('Satellites & Sensors', this)">🛰️ Satellites & Sensors</button>
-        <button class="filter-chip" data-filter="Climate Processes" onclick="filterGuidedModules('Climate Processes', this)">🌍 Climate Processes</button>
-        <button class="filter-chip" data-filter="Math & Calculations" onclick="filterGuidedModules('Math & Calculations', this)">🧮 Math & Formulas</button>
+      <!-- Filter Controls & Actions -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <div class="guided-filter-tabs" style="margin-bottom: 0;">
+          <button class="filter-chip active" data-filter="all" onclick="filterGuidedModules('all', this)">All Modules (12)</button>
+          <button class="filter-chip" data-filter="weakness" id="guided-weakness-btn" onclick="filterGuidedModules('weakness', this)">🎯 My Diagnostic Weaknesses</button>
+          <button class="filter-chip" data-filter="Satellites & Sensors" onclick="filterGuidedModules('Satellites & Sensors', this)">🛰️ Satellites & Sensors</button>
+          <button class="filter-chip" data-filter="Climate Processes" onclick="filterGuidedModules('Climate Processes', this)">🌍 Climate Processes</button>
+          <button class="filter-chip" data-filter="Math & Calculations" onclick="filterGuidedModules('Math & Calculations', this)">🧮 Math & Formulas</button>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" onclick="expandAllModules()">📖 Expand All</button>
+          <button class="btn btn-secondary btn-sm" onclick="collapseAllModules()">📕 Collapse All</button>
+        </div>
       </div>
 
       <!-- Modules Container -->
@@ -5088,6 +5107,28 @@ function launchTargetedGuidedMode() {
 function openWeaknessModule(category) {
   switchTab('guided');
   filterGuidedModules(category);
+}
+
+function skipToGuidedLearning(category) {
+  switchTab('guided');
+  if (category) {
+    filterGuidedModules(category);
+  } else {
+    filterGuidedModules('all', document.querySelector('.guided-filter-tabs .filter-chip[data-filter="all"]'));
+  }
+  // Open the first module by default so learning begins immediately
+  const firstBody = document.querySelector('.module-body');
+  if (firstBody) firstBody.classList.add('open');
+}
+
+function expandAllModules() {
+  document.querySelectorAll('.module-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('[id^="icon-toggle-"]').forEach(i => i.textContent = '▲');
+}
+
+function collapseAllModules() {
+  document.querySelectorAll('.module-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('[id^="icon-toggle-"]').forEach(i => i.textContent = '▼');
 }
 
 // ================= ADAPTIVE GUIDED LEARNING =================

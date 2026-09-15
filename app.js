@@ -313,6 +313,28 @@ function openWeaknessModule(category) {
   filterGuidedModules(category);
 }
 
+function skipToGuidedLearning(category) {
+  switchTab('guided');
+  if (category) {
+    filterGuidedModules(category);
+  } else {
+    filterGuidedModules('all', document.querySelector('.guided-filter-tabs .filter-chip[data-filter="all"]'));
+  }
+  // Open the first module by default so learning begins immediately
+  const firstBody = document.querySelector('.module-body');
+  if (firstBody) firstBody.classList.add('open');
+}
+
+function expandAllModules() {
+  document.querySelectorAll('.module-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('[id^="icon-toggle-"]').forEach(i => i.textContent = '▲');
+}
+
+function collapseAllModules() {
+  document.querySelectorAll('.module-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('[id^="icon-toggle-"]').forEach(i => i.textContent = '▼');
+}
+
 // ================= ADAPTIVE GUIDED LEARNING =================
 function renderGuidedModules() {
   const container = document.getElementById('guided-modules-container');
