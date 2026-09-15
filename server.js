@@ -59,7 +59,7 @@ const server = http.createServer((req, res) => {
 
     // Allow CORS and proper caching
     let disposition = undefined;
-    if (ext === '.zip') disposition = 'attachment; filename="OrbitSense_Remote_Sensing_Div_C_Package.zip";
+    if (ext === '.zip') disposition = 'attachment; filename="OrbitSense_Remote_Sensing_Div_C_Package.zip"';
     const headers = {
       ...(disposition ? { 'Content-Disposition': disposition } : {}),
       'Content-Type': contentType,
