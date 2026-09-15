@@ -56,14 +56,14 @@
       </nav>
 
       <div class="nav-actions">
-        <a href="OrbitSense_Remote_Sensing_Div_C_Package.zip" download="OrbitSense_Remote_Sensing_Div_C_Package.zip" class="btn-print-nav" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: var(--cyan); text-decoration: none;">
+        <button class="btn-print-nav" onclick="openDownloadModal()" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: var(--cyan);">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
           Download Package (.zip)
-        </a>
+        </button>
         <button class="btn-print-nav" onclick="printCheatSheet()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="6 9 6 2 18 2 18 9"></polyline>
@@ -654,9 +654,9 @@
           TI-84 keystrokes, satellite specifications, sensor bands, and climate cycles.
         </p>
         <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
-          <a href="OrbitSense_Remote_Sensing_Div_C_Package.zip" download="OrbitSense_Remote_Sensing_Div_C_Package.zip" class="btn btn-primary" style="text-decoration: none;">
+          <button class="btn btn-primary" onclick="openDownloadModal()">
             📦 Download Offline Study Package (.zip)
-          </a>
+          </button>
           <button class="btn btn-secondary" onclick="printCheatSheet()">🖨️ Print / Save as PDF</button>
         </div>
       </div>
@@ -674,6 +674,91 @@
       <button class="modal-close-btn" onclick="closeSatelliteModal()">✕</button>
       <div id="modal-satellite-content">
         <!-- Dynamically rendered -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DOWNLOAD & EXPORT HUB MODAL ================= -->
+  <div class="modal-overlay" id="download-modal" onclick="closeDownloadModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()" style="max-width: 760px;">
+      <button class="modal-close-btn" onclick="closeDownloadModal()">✕</button>
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+        <span style="font-size: 28px;">📦</span>
+        <div>
+          <h2 style="font-size: 22px; color: #fff; font-weight: 800;">Download OrbitSense Div C Study Package</h2>
+          <p style="font-size: 13.5px; color: var(--text-muted);">Choose your preferred download method below:</p>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+        <!-- Option 1: Complete Offline ZIP -->
+        <div style="background: var(--bg-deep); border: 1px solid var(--border-dim); border-radius: 12px; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+            <strong style="color: var(--cyan); font-size: 16px;">1. Complete Offline ZIP Archive (99 KB)</strong>
+            <span class="badge badge-cyan">Recommended</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
+            Includes <code>index.html</code>, <code>style.css</code>, <code>data.js</code>, <code>app.js</code>, 
+            <code>SCIENCE_OLYMPIAD_REMOTE_SENSING_DIVISION_C_GUIDE.md</code>, and <code>README_OFFLINE_INSTRUCTIONS.txt</code>. 
+            Extract and double-click <code>index.html</code> to study 100% offline.
+          </p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="downloadViaNewTab('OrbitSense_Remote_Sensing_Div_C_Package.zip')">
+              ⬇️ Direct Download ZIP (New Tab)
+            </button>
+            <a href="https://github.com/JayeshPatil2010/Pascal-Predict/archive/refs/heads/arena/01a0a55b-pascal-predict.zip" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="text-decoration: none;">
+              🐙 GitHub 1-Click ZIP Download
+            </a>
+          </div>
+        </div>
+
+        <!-- Option 2: Single-File All-in-One HTML -->
+        <div style="background: var(--bg-deep); border: 1px solid var(--border-dim); border-radius: 12px; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+            <strong style="color: var(--emerald); font-size: 16px;">2. Single-File Standalone Web App (.html)</strong>
+            <span class="badge badge-emerald">Zero-Zip / Zero-Setup</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
+            The entire application bundled into one single self-contained HTML file (292 KB). 
+            No unzipping needed. Open in a new tab, then press <strong>Ctrl+S</strong> (or <strong>Cmd+S</strong> on Mac) to save it directly to your laptop or phone!
+          </p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="OrbitSense_Standalone_AllInOne.html" target="_blank" rel="noopener noreferrer" class="btn btn-success" style="text-decoration: none;">
+              🌐 Open Single-File HTML in New Tab
+            </a>
+            <button class="btn btn-secondary" onclick="downloadViaNewTab('OrbitSense_Standalone_AllInOne.html')">
+              ⬇️ Direct Download HTML
+            </button>
+          </div>
+        </div>
+
+        <!-- Option 3: Markdown Master Study Guide -->
+        <div style="background: var(--bg-deep); border: 1px solid var(--border-dim); border-radius: 12px; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+            <strong style="color: var(--amber); font-size: 16px;">3. Competition Study Guide & Formula Manual (.md)</strong>
+            <span class="badge badge-amber">Textbook & TI-84 Cheats</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
+            Complete 1,500-line study guide covering all 18 satellites, 6 climate systems, master formula derivations, 
+            TI-84 keystrokes, and competition traps.
+          </p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="copy-guide-btn" onclick="copyStudyGuideToClipboard()">
+              📋 Copy Entire Guide to Clipboard
+            </button>
+            <a href="SCIENCE_OLYMPIAD_REMOTE_SENSING_DIVISION_C_GUIDE.md" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="text-decoration: none;">
+              📄 View Raw Markdown
+            </a>
+          </div>
+        </div>
+
+        <!-- GitHub Branch Reference -->
+        <div style="font-size: 12px; color: var(--text-dim); text-align: center; margin-top: 4px;">
+          Official Git Branch: 
+          <a href="https://github.com/JayeshPatil2010/Pascal-Predict/tree/arena/01a0a55b-pascal-predict" target="_blank" rel="noopener noreferrer" style="color: var(--cyan);">
+            github.com/JayeshPatil2010/Pascal-Predict (branch: arena/01a0a55b-pascal-predict)
+          </a>
+        </div>
       </div>
     </div>
   </div>

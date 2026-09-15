@@ -58,7 +58,10 @@ const server = http.createServer((req, res) => {
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
     // Allow CORS and proper caching
+    let disposition = undefined;
+    if (ext === '.zip') disposition = 'attachment; filename="OrbitSense_Remote_Sensing_Div_C_Package.zip";
     const headers = {
+      ...(disposition ? { 'Content-Disposition': disposition } : {}),
       'Content-Type': contentType,
       'Access-Control-Allow-Origin': '*',
       'Cache-Control': 'no-cache'

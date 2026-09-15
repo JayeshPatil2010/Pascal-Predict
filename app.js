@@ -879,6 +879,47 @@ function closeSatelliteModal(e) {
   document.getElementById('satellite-modal').classList.remove('open');
 }
 
+// ================= DOWNLOAD & EXPORT MODAL =================
+function openDownloadModal() {
+  document.getElementById('download-modal').classList.add('open');
+}
+
+function closeDownloadModal(e) {
+  if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close-btn')) return;
+  document.getElementById('download-modal').classList.remove('open');
+}
+
+function downloadViaNewTab(filename) {
+  // Opening in a new browser tab escapes the iframe sandbox restriction!
+  const win = window.open(filename, '_blank');
+  if (!win) {
+    window.location.href = filename;
+  }
+}
+
+function copyStudyGuideToClipboard() {
+  const btn = document.getElementById('copy-guide-btn');
+  btn.textContent = '⏳ Fetching guide...';
+  fetch('/SCIENCE_OLYMPIAD_REMOTE_SENSING_DIVISION_C_GUIDE.md')
+    .then(res => res.text())
+    .then(text => {
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✅ Copied to Clipboard!';
+        btn.classList.add('btn-success');
+        btn.classList.remove('btn-primary');
+        setTimeout(() => {
+          btn.textContent = '📋 Copy Entire Guide to Clipboard';
+          btn.classList.add('btn-primary');
+          btn.classList.remove('btn-success');
+        }, 3000);
+      });
+    })
+    .catch(err => {
+      btn.textContent = '❌ Error loading guide';
+      console.error(err);
+    });
+}
+
 // ================= CLIMATE TOPICS =================
 function renderClimateTopics() {
   const container = document.getElementById('climate-topics-container');
