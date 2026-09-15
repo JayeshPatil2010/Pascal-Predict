@@ -663,7 +663,14 @@ function renderCheat() {
 /* ============================================================
    boot
    ============================================================ */
-renderModules(); renderDsoCards(); renderEq(); renderCheat(); renderCourse();
+try {
+  renderModules(); renderDsoCards(); renderEq(); renderCheat(); renderCourse();
+} catch (err) {
+  const box = document.getElementById("course");
+  if (box) box.innerHTML = '<div class="flashwarn">The course data did not load: ' + err.message +
+    '<br>Do a hard refresh (Ctrl+Shift+R). If it still fails, tell me and I will inline the data.</div>';
+  console.error(err);
+}
 newDsoRound(); newGraphQ(); startDiag("rand"); startCards();
 document.getElementById("g-new").onclick = newGraphQ;
 document.getElementById("reset").onclick = () => { if (confirm("Clear all your progress?")) { localStorage.removeItem(STORE_KEY); location.reload(); } };
