@@ -153,16 +153,12 @@ const HR_STARS = {
   WD: [[12000, 5e-3, "WD"], [25000, 2e-2, "WD"], [8000, 1e-3, "WD"], [40000, 8e-2, "WD"]]
 };
 
-/* --- light curves --- */
+/* --- light curves (2027 scope: Cepheids, RR Lyrae, Type Ia, eclipsing binaries) --- */
 const LC = {
-  cepheid: { f: t => { const p = 10, ph = (t % p) / p; return 6 + 1.1 * (0.5 + 0.5 * Math.sin(2 * Math.PI * (ph - 0.15))) * (1 - 0.35 * ph); }, xmax: 40, xlab: "Time (days)", lab: "Cepheid" },
-  rrlyrae: { f: t => { const p = 0.6, ph = (t % p) / p; return 12 + 0.8 * (0.5 + 0.5 * Math.sin(2 * Math.PI * (ph - 0.12))) * (1 - 0.3 * ph); }, xmax: 2.4, xlab: "Time (days)", lab: "RR Lyrae" },
-  mira: { f: t => { const p = 330, ph = (t % p) / p; return 6 + 3.2 * Math.pow(Math.max(0, Math.sin(Math.PI * Math.pow(ph, 1.3))), 1.4); }, xmax: 1400, xlab: "Time (days)", lab: "Mira variable" },
-  eclipsing: { f: t => { const p = 2.4, ph = (t % p) / p; let m = 11.0; const dip = (c, wd, dp) => { let d = Math.abs(((ph - c + 0.5) % 1) - 0.5) * 2; return d < wd ? dp * (1 - Math.pow(d / wd, 2)) : 0; }; return m + dip(0.0, 0.10, 0.9) + dip(0.5, 0.10, 0.35); }, xmax: 9.6, xlab: "Time (days)", lab: "Eclipsing binary" },
+  cepheid: { f: t => { const p = 10, ph = (t % p) / p; return 6 + 1.1 * (0.5 + 0.5 * Math.sin(2 * Math.PI * (ph - 0.15))) * (1 - 0.35 * ph); }, xmax: 40, xlab: "Time (days)", lab: "Cepheid variable" },
+  rrlyrae: { f: t => { const p = 0.6, ph = (t % p) / p; return 12 + 0.8 * (0.5 + 0.5 * Math.sin(2 * Math.PI * (ph - 0.12))) * (1 - 0.3 * ph); }, xmax: 2.4, xlab: "Time (days)", lab: "RR Lyrae variable" },
   typeIa: { f: t => { if (t < 18) return 16 - 8 * Math.pow(t / 18, 0.6); return 8 + 4.2 * Math.min(1, (t - 18) / 90); }, xmax: 140, xlab: "Days since explosion", lab: "Type Ia supernova" },
-  typeII: { f: t => { if (t < 8) return 15.5 - 6 * Math.pow(t / 8, 0.7); if (t < 100) return 9.5 + 0.9 * (t - 8) / 92; return 10.4 + 2.4 * Math.min(1, (t - 100) / 160); }, xmax: 300, xlab: "Days since explosion", lab: "Type II supernova" },
-  ttauri: { f: t => 12.4 + 0.55 * Math.sin(t / 3.1) + 0.35 * Math.sin(t / 1.13 + 1) + 0.25 * Math.sin(t / 7.7 + 2) + 0.2 * Math.sin(t / 0.47), xmax: 60, xlab: "Time (days)", lab: "T Tauri star" },
-  pulsar: { f: t => { const p = 0.03, ph = (t % p) / p; return 15.4 - 2.6 * Math.exp(-Math.pow(ph / 0.035, 2)) - 0.5 * Math.exp(-Math.pow((ph - 0.02) / 0.05, 2)); }, xmax: 0.12, xlab: "Time (seconds)", lab: "Pulsar" }
+  eclipsing: { f: t => { const p = 2.4, ph = (t % p) / p; let m = 11.0; const dip = (c, wd, dp) => { let d = Math.abs(((ph - c + 0.5) % 1) - 0.5) * 2; return d < wd ? dp * (1 - Math.pow(d / wd, 2)) : 0; }; return m + dip(0.0, 0.10, 0.9) + dip(0.5, 0.10, 0.35); }, xmax: 9.6, xlab: "Time (days)", lab: "Eclipsing binary" }
 };
 function drawLC(c, kind) {
   const { g, w, h } = setupCanvas(c); const pad = { l: 46, r: 12, t: 12, b: 34 };
@@ -250,32 +246,142 @@ function drawPL(c, P, M) {
   g.fillStyle = "#fff"; g.textAlign = "center"; g.fillText("P = " + P + " d", X(P), Y(M) - 14);
 }
 
+/* --- galaxy rotation curve --- */
+function drawRC(c, shape, vflat) {
+  const { g, w, h } = setupCanvas(c); const pad = { l: 50, r: 14, t: 14, b: 34 };
+  const R = 20, V = 320;
+  const X = r => pad.l + r / R * (w - pad.l - pad.r);
+  const Y = v => h - pad.b - v / V * (h - pad.t - pad.b);
+  const v = r => shape === "flat" ? vflat * (1 - Math.exp(-r / 2.2)) : (r < 3 ? 260 * Math.sqrt(r / 3) : 260 * Math.sqrt(3 / r));
+  g.font = "11px system-ui"; g.fillStyle = "#8b9ac4"; g.textAlign = "center";
+  for (let r = 0; r <= R; r += 5) g.fillText(r, X(r), h - pad.b + 14);
+  g.textAlign = "right";
+  [0, 100, 200, 300].forEach(vv => g.fillText(vv, pad.l - 6, Y(vv) + 4));
+  axes(g, w, h, pad, "Radius from center (kpc)", "Orbital speed (km/s)");
+  g.beginPath();
+  for (let i = 0; i <= 400; i++) { const r = i / 400 * R, x = X(r), y = Y(v(r) + (i % 7) * 1.6); i ? g.lineTo(x, y) : g.moveTo(x, y); }
+  g.strokeStyle = "#ffd166"; g.lineWidth = 2.2; g.stroke();
+  g.setLineDash([5, 5]); g.beginPath(); g.moveTo(pad.l, Y(250)); g.lineTo(w - pad.r, Y(250));
+  g.strokeStyle = "rgba(255,255,255,.18)"; g.lineWidth = 1; g.stroke(); g.setLineDash([]);
+}
+
+/* --- Hubble diagram --- */
+function drawHubble(c, H0, pts, hi) {
+  const { g, w, h } = setupCanvas(c); const pad = { l: 52, r: 14, t: 14, b: 34 };
+  const D = 220, V = 16500;
+  const X = d => pad.l + d / D * (w - pad.l - pad.r);
+  const Y = v => h - pad.b - v / V * (h - pad.t - pad.b);
+  g.font = "11px system-ui"; g.fillStyle = "#8b9ac4"; g.textAlign = "center";
+  for (let d = 0; d <= D; d += 50) g.fillText(d, X(d), h - pad.b + 14);
+  g.textAlign = "right";
+  [0, 5000, 10000, 15000].forEach(v => g.fillText(v, pad.l - 6, Y(v) + 4));
+  axes(g, w, h, pad, "Distance (Mpc)", "Recession velocity (km/s)");
+  g.beginPath(); g.moveTo(X(0), Y(0)); g.lineTo(X(D), Y(H0 * D)); g.strokeStyle = "#5cc8ff"; g.lineWidth = 2; g.stroke();
+  g.fillStyle = "#5cc8ff"; g.font = "12px system-ui"; g.textAlign = "left"; g.fillText("v = H₀ d", X(20), Y(H0 * 20) - 10);
+  pts.forEach((p, i) => {
+    g.beginPath(); g.arc(X(p[0]), Y(p[1]), i === hi ? 7 : 3.6, 0, 7);
+    g.fillStyle = i === hi ? "#ff5c7a" : "#c7d2f0"; g.fill();
+    if (i === hi) { g.strokeStyle = "#fff"; g.lineWidth = 2; g.stroke(); }
+  });
+}
+
+/* --- Tully-Fisher --- */
+function drawTF(c, v, M) {
+  const { g, w, h } = setupCanvas(c); const pad = { l: 52, r: 14, t: 14, b: 34 };
+  const XV = vv => pad.l + (Math.log10(vv) - Math.log10(50)) / (Math.log10(400) - Math.log10(50)) * (w - pad.l - pad.r);
+  const YM = m => pad.t + (m + 24) / 9 * (h - pad.t - pad.b);
+  g.font = "11px system-ui"; g.fillStyle = "#8b9ac4"; g.textAlign = "center";
+  [60, 100, 150, 220, 300, 400].forEach(vv => g.fillText(vv, XV(vv), h - pad.b + 14));
+  g.textAlign = "right";
+  [-16, -18, -20, -22].forEach(m => g.fillText(m, pad.l - 6, YM(m) + 4));
+  axes(g, w, h, pad, "Maximum rotation speed v_max (km/s, log)", "Absolute magnitude M_B");
+  g.beginPath(); g.moveTo(XV(50), YM(-9.95 * Math.log10(50) + 3.15)); g.lineTo(XV(400), YM(-9.95 * Math.log10(400) + 3.15));
+  g.strokeStyle = "#5cc8ff"; g.lineWidth = 2.2; g.stroke();
+  g.fillStyle = "#5cc8ff"; g.font = "12px system-ui"; g.textAlign = "left"; g.fillText("Tully–Fisher", XV(60), YM(-9.95 * Math.log10(60) + 3.15) - 12);
+  g.beginPath(); g.arc(XV(v), YM(M), 7, 0, 7); g.fillStyle = "#fff"; g.fill(); g.strokeStyle = "#ff5c7a"; g.lineWidth = 2.5; g.stroke();
+  g.fillStyle = "#fff"; g.textAlign = "center"; g.fillText("v = " + v + " km/s", XV(v), YM(M) - 14);
+}
+
+/* --- gravitational wave chirp --- */
+function drawGW(c) {
+  const { g, w, h } = setupCanvas(c); const pad = { l: 50, r: 14, t: 14, b: 34 };
+  const T = 0.42, tc = 0.32, dt = 1 / 4000;
+  let pts = [], phi = 0, t = 0.005;
+  while (t < tc - 0.004) { const tau = tc - t, f = 60 * Math.pow(tau, -0.375), A = 0.34 * Math.pow(tau, -0.25); phi += 2 * Math.PI * f * dt; pts.push([t, A * Math.sin(phi)]); t += dt; }
+  const amax = pts[pts.length - 1] ? 0.34 * Math.pow(0.004, -0.25) : 1;
+  let t2 = tc, k = 0;
+  while (t2 < T) { const e = Math.exp(-(t2 - tc) / 0.012); pts.push([t2, 0.78 * amax * e * Math.sin(2 * Math.PI * 420 * (t2 - tc) + phi)]); t2 += dt; }
+  const X = tt => pad.l + tt / T * (w - pad.l - pad.r);
+  const Y = y => (pad.t + h - pad.b) / 2 - y * (h - pad.t - pad.b) * 0.42;
+  g.font = "11px system-ui"; g.fillStyle = "#8b9ac4"; g.textAlign = "center";
+  for (let tt = 0; tt <= 0.4; tt += 0.1) g.fillText(tt.toFixed(1), X(tt), h - pad.b + 14);
+  axes(g, w, h, pad, "Time (seconds)", "Strain (wave amplitude)");
+  g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(X(p[0]), Y(p[1])) : g.moveTo(X(p[0]), Y(p[1])));
+  g.strokeStyle = "#ffd166"; g.lineWidth = 1.5; g.stroke();
+  g.fillStyle = "#8b9ac4"; g.font = "11px system-ui"; g.textAlign = "left";
+  g.fillText("inspiral →", X(0.02), pad.t + 14);
+  g.fillText("merger + ringdown", X(tc + 0.01), pad.t + 14);
+}
+
 /* --- graph question bank --- */
 let gq = null;
 function newGraphQ() {
-  const kinds = ["hr", "lc", "bb", "spec", "pl", "hr", "lc", "lc", "spec"];
+  const kinds = ["hr", "lc", "bb", "spec", "pl", "rc", "hubble", "tf", "gw", "lc", "spec", "hubble", "gw", "rc"];
   const kind = kinds[Math.floor(Math.random() * kinds.length)];
   let q;
   if (kind === "hr") {
     const zk = shuffle(Object.keys(HR_STARS))[0];
     const star = HR_STARS[zk][Math.floor(Math.random() * HR_STARS[zk].length)];
-    q = { kind, zk, star, q: `Which region of the H-R diagram is the star marked ★ (${star[2] || "?"}) in?`, opts: shuffle(["Main sequence", "Red giant branch", "Supergiant", "White dwarf"]), ans: { MS: "Main sequence", RG: "Red giant branch", SG: "Supergiant", WD: "White dwarf" }[zk], exp: `T ≈ ${star[0].toLocaleString()} K, L ≈ ${star[1].toLocaleString()} L☉ → ${({ MS: "main sequence", RG: "the red giant branch (cool but very luminous)", SG: "the supergiant region (extremely luminous)", WD: "the white dwarf corner (hot but tiny → faint)" })[zk]}.` };
+    q = { kind, zk, star, q: `Which region of the H-R diagram is the star marked ★ (${star[2] || "?"}) in?`, opts: shuffle(["Main sequence", "Red giant branch", "Supergiant", "White dwarf"]), ans: { MS: "Main sequence", RG: "Red giant branch", SG: "Supergiant", WD: "White dwarf" }[zk], exp: `T ≈ ${star[0].toLocaleString()} K, L ≈ ${star[1].toLocaleString()} L☉ → ${({ MS: "the main sequence", RG: "the red giant branch (cool but very luminous)", SG: "the supergiant region (extremely luminous)", WD: "the white dwarf corner (hot but tiny → faint)" })[zk]}.` };
   } else if (kind === "lc") {
     const k = shuffle(Object.keys(LC))[0];
-    q = { kind, k, q: "What kind of object/variable does this light curve show?", opts: shuffle(["Cepheid", "RR Lyrae", "Mira variable", "Eclipsing binary", "Type Ia supernova", "Type II supernova", "T Tauri star", "Pulsar"].sort(() => Math.random() - .5).slice(0, 5).concat([LC[k].lab]).filter((v, i, a) => a.indexOf(v) === i).slice(0, 6)), ans: LC[k].lab, exp: ({ Cepheid: "Sawtooth, period days–weeks, amplitude ~1 mag.", "RR Lyrae": "Sawtooth but period < 1 day, amplitude < 1 mag.", "Mira variable": "Period hundreds of days with a huge (several-mag) amplitude.", "Eclipsing binary": "Flat top with two alternating dips of different depths.", "Type Ia supernova": "Sharp rise (~20 d) then smooth decline — no plateau.", "Type II supernova": "Plateau then slow linear decay.", "T Tauri star": "Irregular, non-periodic flickering.", Pulsar: "Narrow, extremely regular pulses on a sub-second period." })[LC[k].lab] };
-    if (!q.opts.includes(q.ans)) q.opts.push(q.ans), q.opts = shuffle(q.opts);
+    const pool = ["Cepheid variable", "RR Lyrae variable", "Type Ia supernova", "Eclipsing binary"].filter(x => x !== LC[k].lab);
+    q = { kind, k, q: "What kind of object does this light curve show?", opts: shuffle(shuffle(pool).slice(0, 3).concat([LC[k].lab])), ans: LC[k].lab, exp: ({ "Cepheid variable": "Sawtooth, period days–weeks, amplitude ~1 mag — a young Pop I supergiant on the instability strip.", "RR Lyrae variable": "Sawtooth but period < 1 day, amplitude < 1 mag — an old Pop II horizontal-branch star.", "Type Ia supernova": "Sharp rise in ~20 days, then a smooth decline; no plateau. Peak M_B ≈ −19.3.", "Eclipsing binary": "Flat top with two alternating dips of different depths at a fixed short period." })[LC[k].lab] };
   } else if (kind === "bb") {
     const trio = shuffle([[3000, 6000, 12000], [4000, 8000, 20000], [5800, 10000, 30000], [2500, 5000, 15000]])[0];
-    const hot = trio.indexOf(Math.max(...trio));
-    q = { kind, trio, hot, q: "Which blackbody curve comes from the HOTTEST star?", opts: shuffle(trio.map(t => t + " K")), ans: Math.max(...trio) + " K", exp: `Hotter blackbodies peak at shorter wavelengths (Wien: λ_max T = 2.9×10⁶ nm·K) and are far more luminous per unit area (L ∝ T⁴).` };
+    q = { kind, trio, hot: trio.indexOf(Math.max(...trio)), q: "Which blackbody curve comes from the HOTTEST star?", opts: shuffle(trio.map(t => t + " K")), ans: Math.max(...trio) + " K", exp: "Hotter blackbodies peak at shorter wavelengths (Wien: λ_max T = 2.9×10⁶ nm·K) and radiate far more per unit area (L ∝ T⁴)." };
   } else if (kind === "spec") {
     const cls = shuffle(Object.keys(SPEC))[0];
-    q = { kind, cls, q: "What is the spectral class of this star?", opts: shuffle(["O", "B", "A", "F", "G", "K"].concat([cls]).filter((v, i, a) => a.indexOf(v) === i).slice(0, 5).concat([cls]).filter((v, i, a) => a.indexOf(v) === i)), ans: cls, exp: ({ O: "He II lines + weak H → O (hottest, ~40,000 K).", B: "He I strong, Balmer moderate → B.", A: "Balmer lines at maximum strength → A.", F: "H weaker, Ca II/metals growing → F.", G: "Ca II H&K dominant, many metals → G (the Sun is G2V).", K: "Strong metals + molecular bands appear → K.", M: "Broad TiO molecular bands dominate → M (coolest)." })[cls] };
-  } else {
+    q = { kind, cls, q: "What is the spectral class of this star?", opts: shuffle(["O", "B", "A", "F", "G", "K"].concat([cls]).filter((v, i, a) => a.indexOf(v) === i).slice(0, 4).concat([cls]).filter((v, i, a) => a.indexOf(v) === i)), ans: cls, exp: ({ O: "He II lines + weak H → O (hottest, ~40,000 K).", B: "He I strong, moderate Balmer → B.", A: "Balmer lines at maximum strength → A.", F: "H weaker, Ca II and metals growing → F.", G: "Ca II H&K dominant, many metals → G (the Sun is G2V).", K: "Strong metals, molecular bands appear → K.", M: "Broad TiO molecular bands dominate → M (coolest)." })[cls] };
+  } else if (kind === "pl") {
     const P = shuffle([3, 5, 8, 10, 15, 20, 30, 50])[0];
     const M = +(-2.76 * Math.log10(P) - 1.40).toFixed(2);
     const wrongs = shuffle([+(M + 1.8).toFixed(2), +(M - 2.1).toFixed(2), +(M + 3.3).toFixed(2)]);
-    q = { kind: "pl", P, M, q: `A Cepheid has a period of ${P} days. Using M_V = −2.76·log₁₀(P) − 1.40, what is its absolute visual magnitude?`, opts: shuffle([M, ...wrongs].map(String)), ans: String(M), exp: `log₁₀(${P}) = ${Math.log10(P).toFixed(3)} → M_V = −2.76×${Math.log10(P).toFixed(3)} − 1.40 = ${M}. Longer period ⇒ more luminous (more negative M).` };
+    q = { kind, P, M, q: `A Cepheid has a period of ${P} days. Using M_V = −2.76·log₁₀(P) − 1.40, what is its absolute visual magnitude?`, opts: shuffle([M, ...wrongs].map(String)), ans: String(M), exp: `log₁₀(${P}) = ${Math.log10(P).toFixed(3)} → M_V = −2.76×${Math.log10(P).toFixed(3)} − 1.40 = ${M}. Longer period ⇒ more luminous (more negative M).` };
+  } else if (kind === "rc") {
+    const shape = shuffle(["flat", "keplerian"])[0];
+    const vflat = shuffle([150, 180, 200, 220, 250])[0];
+    q = {
+      kind, shape, vflat, q: "This is the rotation curve of a spiral galaxy. What does it imply?",
+      opts: shuffle(["It has an extended dark matter halo", "Essentially all its mass sits at the center", "It rotates like a solid body", "It is not rotating"]),
+      ans: shape === "flat" ? "It has an extended dark matter halo" : "Essentially all its mass sits at the center",
+      exp: shape === "flat"
+        ? `v stays ~${vflat} km/s as r grows, so M(<r) = v²r/G keeps increasing although the light does not → mass with no light: a dark matter halo.`
+        : `v falls off as ~1/√r (Keplerian), the same behaviour as planets in the Solar System → essentially all the mass is inside the orbit, with no dark halo out to these radii.`
+    };
+  } else if (kind === "hubble") {
+    const H0 = shuffle([67, 70, 72, 73])[0];
+    const pts = []; for (let i = 0; i < 26; i++) { const d = 10 + Math.random() * 200; pts.push([d, H0 * d * (0.93 + 0.14 * Math.random())]); }
+    if (Math.random() < 0.5) {
+      const wrongs = shuffle([H0 - 20, H0 + 25, H0 + 45, H0 - 8].map(x => x + " km/s/Mpc"));
+      q = { kind, H0, pts, hi: -1, q: "What is the slope of the best-fit line — the Hubble constant?", opts: shuffle([H0 + " km/s/Mpc", ...wrongs]), ans: H0 + " km/s/Mpc", exp: `Slope = Δv/Δd. The scatter points follow v = H₀d; real measurements cluster around 67–73 km/s/Mpc, and this line has a slope of ${H0}.` };
+    } else {
+      const v = Math.round(H0 * (1 + Math.floor(Math.random() * 3)) * 25);
+      const d = Math.round(v / H0);
+      pts[0] = [d, v];
+      const wrongs = shuffle([Math.round(d * 2.4), Math.round(d * 0.45), Math.round(d * 1.7)]);
+      q = { kind, H0, pts, hi: 0, ptv: v, q: `A galaxy in this sample recedes at ${v} km/s. Using the line shown (H₀ = ${H0} km/s/Mpc), about how far away is it?`, opts: shuffle([d + " Mpc", ...wrongs.map(x => x + " Mpc")]), ans: d + " Mpc", exp: `d = v/H₀ = ${v}/${H0} ≈ ${d} Mpc (≈ ${(d * 3.26).toFixed(0)} million light-years).` };
+    }
+  } else if (kind === "tf") {
+    const v = shuffle([80, 100, 120, 150, 180, 220, 260, 300])[0];
+    const M = +(-9.95 * Math.log10(v) + 3.15).toFixed(1);
+    const wrongs = shuffle([+(M + 2.6).toFixed(1), +(M - 2.2).toFixed(1), +(M + 4.1).toFixed(1)]);
+    q = { kind: "tf", v, M, q: `A spiral galaxy's rotation curve flattens at v_max = ${v} km/s. Using Tully–Fisher (M_B ≈ −9.95·log₁₀(v_max) + 3.15), what is its absolute B magnitude?`, opts: shuffle([M, ...wrongs].map(String)), ans: String(M), exp: `log₁₀(${v}) = ${Math.log10(v).toFixed(3)} → M_B = −9.95×${Math.log10(v).toFixed(3)} + 3.15 = ${M}. Faster rotation ⇒ more luminous galaxy.` };
+  } else {
+    const variant = Math.random() < 0.5 ? "what" : "why";
+    q = variant === "what"
+      ? { kind: "gw", q: "What kind of event produced this gravitational-wave signal?", opts: shuffle(["Merger of two neutron stars", "Merger of two black holes", "Core-collapse supernova", "A pulsar in the Milky Way", "A solar flare"]), ans: "Merger of two neutron stars", exp: "It is a CHIRP: frequency and amplitude both rise as the orbit decays, then a sharp merger and ringdown. That waveform only comes from a compact binary — and a slowly-sweeping, long chirp means low masses, i.e. neutron stars (GW170817's chirp lasted ~100 s)." }
+      : { kind: "gw", q: "In this chirp, why does the frequency increase with time?", opts: shuffle(["The orbit is shrinking as energy is radiated away", "The masses of the objects are growing", "The wave is being redshifted by cosmic expansion", "The detector drifts during the observation"]), ans: "The orbit is shrinking as energy is radiated away", exp: "Gravitational waves carry away orbital energy, so the separation shrinks and the orbital frequency rises — which is exactly why the signal speeds up into the merger. (The GW frequency is twice the orbital frequency.)" };
   }
   gq = q; gq.answered = false;
   document.getElementById("g-q").textContent = q.q;
@@ -287,13 +393,17 @@ function newGraphQ() {
   if (q.kind === "bb") drawBB(c, q.trio, -1);
   if (q.kind === "spec") drawSpec(c, q.cls);
   if (q.kind === "pl") drawPL(c, q.P, q.M);
+  if (q.kind === "rc") drawRC(c, q.shape, q.vflat);
+  if (q.kind === "hubble") drawHubble(c, q.H0, q.pts, q.hi);
+  if (q.kind === "tf") drawTF(c, q.v, q.M);
+  if (q.kind === "gw") drawGW(c);
   document.querySelectorAll("#g-opts .opt").forEach(b => b.onclick = () => {
     if (gq.answered) return; gq.answered = true;
     const ok = b.textContent.trim() === String(gq.ans);
     mark("graph-" + gq.kind, ok);
     b.classList.add(ok ? "good" : "bad");
     if (!ok) document.querySelectorAll("#g-opts .opt").forEach(o => { if (o.textContent.trim() === String(gq.ans)) o.classList.add("good"); });
-    if (gq.kind === "bb" && ok) drawBB(c, gq.trio, gq.trio.indexOf(Math.max(...gq.trio)));
+    if (gq.kind === "bb" && ok) drawBB(c, gq.trio, gq.hot);
     document.getElementById("g-fb").innerHTML = `<div class="${ok ? "ok" : "no"}">${ok ? "Correct" : "Answer: " + gq.ans}</div><div class="recap">${gq.exp}</div>`;
   });
 }
@@ -331,7 +441,7 @@ function finishDiag() {
   DIAGNOSTIC.forEach(q => { const id = "diag-" + q.q.slice(0, 40); const t = topicStat[q.topic] || (topicStat[q.topic] = { r: 0, w: 0 }); if (S.right[id]) t.r++; if (S.wrong[id]) t.w++; });
   const rows = Object.entries(topicStat).sort((a, b) => (b[1].w) - (a[1].w)).map(([t, s]) => {
     const pct = s.r + s.w ? Math.round(100 * s.r / (s.r + s.w)) : 0;
-    const modMap = { story: "story", spectra: "spectra", hr: "hr", blackbody: "blackbody", variables: "variables", distance: "distance", binaries: "binaries", wave: "wave", dso: "dso", endstates: "endstates" };
+    const modMap = { galaxies: "galaxies", pops: "pops", starburst: "starburst", interact: "interact", tools: "tools", candles: "candles", cosmo: "cosmo", orbits: "orbits", messengers: "messengers", dso: "dso" };
     return `<tr><td><b>${t}</b></td><td>${s.r} ✓ / ${s.w} ✗</td><td><div class="bar"><span style="width:${pct}%"></span></div> ${pct}%</td><td><button class="ghost tiny" onclick="gotoMod('${modMap[t]}')">study it</button></td></tr>`;
   }).join("");
   document.getElementById("diag").innerHTML = `
