@@ -414,3 +414,142 @@ $$\Delta h = \beta \cdot H \cdot \Delta T$$
 8. **Keeling Sawtooth Timing:** Northern Hemisphere photosynthesis causes the annual $CO_2$ minimum in **OCTOBER**; winter respiration causes the annual peak in **MAY**.
 9. **Antarctic Ozone Hole Timing:** The ozone hole forms during **SPRING (September/October)**, NOT mid-winter. Cold winter forms the PSCs; spring sunlight is required to photolyze $Cl_2 \to 2Cl\cdot$ radicals.
 10. **Geostationary Orbits:** GOES satellites orbit at **35,786 km** over the equator with period $T = 23\text{h } 56\text{m}$. They have extreme temporal resolution (seconds/minutes) but coarse spatial resolution ($0.5 - 2\ \text{km}$).
+
+
+---
+
+## 7. Visual Image Sheet Atlas & Sensor Recognition Guide (Science Olympiad Image ID Masterclass)
+
+On Science Olympiad Division C exams, Station Questions heavily feature unlabelled figures, graphs, false-color satellite images, and instrument diagrams. This reference table and breakdown enables instant identification and interpretation.
+
+### 7.1 Visual Identification Cheat Matrix
+
+| Visual Signature on Exam | Physical Units / Axis | Underlying Physics | Instrument & Satellite | Scientific Application |
+| :--- | :--- | :--- | :--- | :--- |
+| **2D Vertical Curtain** (0–30 km altitude vs. Latitude) with needle-thin aerosol plumes & high clouds | Total Attenuated Backscatter ($10^{-3}\ 	ext{km}^{-1}\cdot	ext{sr}^{-1}$) | Mie and Rayleigh elastic backscatter of pulsed laser ($532\ 	ext{nm}$ & $1064\ 	ext{nm}$) | **CALIOP** on **CALIPSO** | Cirrus cloud altitude, Saharan dust transport, wildfire smoke, Polar Stratospheric Clouds (PSCs) |
+| **Radar Vertical Reflectivity Profile** (0–20 km altitude vs. Latitude) with thick storm clouds & core | Equivalent Reflectivity Factor ($	ext{dBZ}$, $-30$ to $+20\ 	ext{dBZ}$) | Rayleigh scattering from large cloud droplets & precipitation at $94\ 	ext{GHz}$ ($\lambda = 3.1\ 	ext{mm}$) | **CPR** on **CloudSat** | Convective cloud depth, rainfall rates, liquid/ice water content, freezing layer melting band |
+| **Three High-Resolution Spectrograms** centered at $0.76\ \mu	ext{m}$, $1.61\ \mu	ext{m}$, and $2.06\ \mu	ext{m}$ | Spectral Radiance vs. Wavelength ($\mu	ext{m}$) with deep absorption notches | Rovibrational absorption transitions of molecular $O_2$ and $CO_2$ in sunlight reflected from surface | **3-Band Grating Spectrometer** on **OCO-2** | Deriving column-averaged dry air mole fraction $X_{CO_2}$ (normalized to surface pressure via $O_2$) |
+| **Color Infrared (CIR) False Color Composite** where vegetation is glowing magenta/red | Reflectance / Digital Numbers mapped to RGB ($B_5 	o R$, $B_4 	o G$, $B_3 	o B$) | Chlorophyll absorbs red light ($0.66\ \mu	ext{m}$) while spongy mesophyll cells scatter Near-Infrared ($0.86\ \mu	ext{m}$) | **OLI-2** on **Landsat 9** (or MSI on Sentinel-2) | Agricultural crop health, deforestation monitoring, burn scar severity, wetland delineation |
+| **Equatorial Pacific Sea Surface Height Anomaly Map** with large warm bulge (+15 to +25 cm) off Peru | Sea Surface Height Anomaly ($	ext{cm}$ or $	ext{mm}$) relative to 20-year mean | Radar two-way pulse timing ($d = c\Delta t/2$) coupled with steric thermal expansion ($\Delta h = eta H \Delta T$) | **Poseidon-4 / AMR** on **Sentinel-6** & **Jason-3** | Detecting El Niño Southern Oscillation (ENSO phases), Kelvin waves, global sea level rise ($3.4\ 	ext{mm/yr}$) |
+| **Global Earth Radiation Budget Heat Maps** with Low Tropical OLR and High Reflected SW | Outgoing Longwave Radiation ($	ext{W/m}^2$, $100 - 350$) and Reflected Shortwave ($	ext{W/m}^2$) | Stefan-Boltzmann thermal emission ($E = \sigma T^4$) and broadband optical solar reflectance | **CERES** on **Terra, Aqua, Suomi-NPP** | Quantifying Earth Energy Imbalance ($+0.8\ 	ext{W/m}^2$), cloud radiative forcing, planetary albedo ($~0.29$) |
+| **Monthly Regional Mass Change Map** showing severe groundwater drops over California/India | Equivalent Water Thickness ($	ext{cm}$ of water) or Terrestrial Water Storage (TWS) | K-band microwave and laser ranging measuring inter-satellite distance perturbations ($\mu	ext{m}$) | **KBR / LRI** on **GRACE & GRACE-FO** | Aquifer depletion, Greenland/Antarctic ice sheet mass loss, drought severity monitoring |
+| **Tropospheric Air Quality Trace Gas Plumes** concentrated over cities, shipping lanes, and basins | Tropospheric Column Density ($10^{15}\ 	ext{molec/cm}^2$ or $\mu	ext{mol/m}^2$) | UV-Visible Differential Optical Absorption Spectroscopy (DOAS) | **TROPOMI** on **Sentinel-5P** (or OMI on Aura) | Tracking urban smog ($NO_2$), sulfur dioxide from volcanoes/coal plants ($SO_2$), and methane leaks ($CH_4$) |
+
+---
+
+### 7.2 Atmospheric Transmission Windows & Absorption Spectra Deep Dive
+
+To interpret satellite radiometer channels, you must master the atmospheric transmission spectrum from UV to Microwave:
+
+1. **UV Shielding Region ($\lambda < 0.31\ \mu	ext{m}$):**
+   - **Absorber:** Ozone ($O_3$) via the Hartley ($200–300\ 	ext{nm}$) and Huggins bands.
+   - **Atmospheric Transmittance:** Virtually $0\%$.
+   - **Remote Sensing Utility:** Spaceborne ozone profiling (TOMIS, OMI, OMPS) by measuring solar backscattered UV; surface is completely shielded from lethal UV-C and most UV-B.
+
+2. **Visible Optical Window ($0.40 - 0.70\ \mu	ext{m}$):**
+   - **Absorber:** Weak ozone (Chappuis band around $0.6\ \mu	ext{m}$). Transmittance is nearly $85–90\%$.
+   - **Scattering:** Dominated by Rayleigh scattering ($\propto \lambda^{-4}$), causing blue skies and strong atmospheric path radiance in Landsat Band 1 (Coastal Aerosol, $0.44\ \mu	ext{m}$) and Band 2 (Blue, $0.48\ \mu	ext{m}$).
+
+3. **Near-Infrared (NIR) and Shortwave Infrared (SWIR) Windows ($0.75 - 2.5\ \mu	ext{m}$):**
+   - Windows exist at:
+     - $0.85\ \mu	ext{m}$ (Landsat Band 5 NIR)
+     - $1.05\ \mu	ext{m}$
+     - $1.24\ \mu	ext{m}$
+     - $1.6\ \mu	ext{m}$ (Landsat Band 6 SWIR-1, snow/cloud discrimination)
+     - $2.2\ \mu	ext{m}$ (Landsat Band 7 SWIR-2, mineralogy and fire scars)
+   - Deep absorption valleys between these windows are caused by **Water Vapor ($H_2O$)** at $0.94\ \mu	ext{m}$, $1.13\ \mu	ext{m}$, $1.40\ \mu	ext{m}$, and $1.90\ \mu	ext{m}$, and **$CO_2$** at $2.06\ \mu	ext{m}$.
+
+4. **Mid-Wave Infrared (MWIR) Window ($3.5 - 4.1\ \mu	ext{m}$):**
+   - Flanked by strong $CO_2$ absorption at $4.3\ \mu	ext{m}$.
+   - Contains high sensitivity to high-temperature blackbody emitters ($T \sim 600 - 1200\ 	ext{K}$) due to Wien's displacement law ($\lambda_{max} pprox 3–4\ \mu	ext{m}$).
+   - **Sensor Use:** GOES-16 ABI Band 7 ($3.9\ \mu	ext{m}$) and MODIS Band 21/22 for wildfire and hot spot detection.
+
+5. **Thermal Infrared (TIR) Atmospheric Window ($8.0 - 12.5\ \mu	ext{m}$):**
+   - Peak terrestrial thermal emission window for Earth ($T pprox 288\ 	ext{K} \implies \lambda_{max} pprox 10\ \mu	ext{m}$).
+   - **The Ozone Notch:** An intense absorption dip occurs at **$9.6\ \mu	ext{m}$** due to stratospheric ozone vibrational bending. Split-window radiometers place bands on either side ($10.5–11.5\ \mu	ext{m}$ and $11.5–12.5\ \mu	ext{m}$) to correct for atmospheric moisture.
+   - **Water Vapor Absorption:** A wide $H_2O$ rotational band blocks transmission for all wavelengths greater than $14\ \mu	ext{m}$.
+   - **$CO_2$ Fundamental Band:** Intense, opaque absorption occurs at **$15.0\ \mu	ext{m}$**, which allows temperature sounding of the stratosphere.
+
+6. **Microwave Windows ($\lambda = 1\ 	ext{mm} - 30\ 	ext{cm}$; $f = 1 - 100\ 	ext{GHz}$):**
+   - Transparent through dry air, clouds, and non-precipitating fog.
+   - Water vapor absorption line at $22.235\ 	ext{GHz}$; Oxygen absorption complex at $60\ 	ext{GHz}$ and $118\ 	ext{GHz}$.
+   - L-band ($1–2\ 	ext{GHz}$): Penetrates vegetation canopy to measure soil moisture (SMAP).
+   - C-band ($5.4\ 	ext{GHz}$): SAR all-weather surface imaging (Sentinel-1).
+   - Ku-band ($13.6\ 	ext{GHz}$): Radar altimeter ocean surface range (Sentinel-6, Jason-3).
+   - W-band ($94\ 	ext{GHz}$): Cloud Profiling Radar (CloudSat).
+
+---
+
+### 7.3 Spectral Reflectance Signature Curves (The 5 Canonical Endmembers)
+
+Every Remote Sensing exam requires identifying the spectral curves of Earth materials:
+
+1. **Healthy Green Vegetation:**
+   - **Blue ($0.45\ \mu	ext{m}$):** Low reflectance ($\sim 5\%$) due to chlorophyll absorption.
+   - **Green ($0.55\ \mu	ext{m}$):** Slight reflectance peak ($\sim 10–15\%$)—why leaves appear green.
+   - **Red ($0.66\ \mu	ext{m}$):** Deep absorption dip ($\sim 3–5\%$) by chlorophyll-a and b for photosynthesis.
+   - **The Red Edge ($0.68 - 0.75\ \mu	ext{m}$):** Extremely steep, near-vertical rise in reflectance.
+   - **Near-Infrared Plateau ($0.75 - 1.3\ \mu	ext{m}$):** High reflectance ($\sim 45–55\%$) caused by multiple refractive scatterings within the spongy mesophyll internal cell structure.
+   - **SWIR Valleys ($1.45\ \mu	ext{m}$ and $1.95\ \mu	ext{m}$):** Water absorption dips; stressed/dry vegetation has higher SWIR reflectance because leaves contain less liquid water.
+
+2. **Clear Deep Water:**
+   - Moderate reflectance in Blue ($\sim 8\%$) and Green ($\sim 5\%$).
+   - Almost **$0\%$ reflectance** across Near-Infrared and Shortwave Infrared (all radiation is absorbed within the top millimeters of water).
+   - On NIR / SWIR images, water bodies appear solid jet black. Turbid or sediment-laden water reflects more in the red and green.
+
+3. **Dry Bare Soil:**
+   - Smooth, monotonic increase in reflectance from visible to SWIR without sharp cliffs.
+   - Reflectance rises from $\sim 10\%$ at $0.4\ \mu	ext{m}$ to $\sim 40\%$ at $2.2\ \mu	ext{m}$.
+   - Wet soil exhibits an identical curve shape but lower overall reflectance across all bands (darker).
+
+4. **Fresh Snow:**
+   - Exceptional visible reflectance ($\sim 90–98\%$) from $0.4\ \mu	ext{m}$ to $0.8\ \mu	ext{m}$.
+   - Steep, plunging drop into the SWIR ($<10\%$ at $1.6\ \mu	ext{m}$).
+   - **Key Discriminator:** Snow is blindingly bright in the visible and black in the SWIR. Liquid water clouds remain bright in both visible and SWIR. This physics powers the Normalized Difference Snow Index ($NDSI$).
+
+5. **Man-Made Impervious Surfaces (Concrete / Asphalt):**
+   - Asphalt: Uniformly low, flat reflectance ($\sim 10–15\%$) across all visible and infrared bands.
+   - Concrete: Flat, elevated reflectance ($\sim 30–45\%$) across visible through SWIR.
+
+---
+
+### 7.4 Satellite Remote Sensing Synergy (A-Train Constellation Case Study)
+
+The **A-Train (Afternoon Constellation)** is the most famous satellite formation in Science Olympiad history:
+- Flying in a sun-synchronous orbit at $705\ 	ext{km}$ altitude with an equatorial crossing time around 1:30 PM local solar time.
+- Spacecraft fly mere seconds to minutes apart along the exact same orbital ground track:
+  - **Aqua (AIRS, MODIS, CERES):** Broad-swath imaging, sea surface temperature, and radiation budget.
+  - **CloudSat (CPR 94 GHz):** Pierces deep into cloud decks to observe precipitation cores and cloud base.
+  - **CALIPSO (CALIOP 532/1064 nm Lidar):** Detects optically thin cirrus and fine aerosol plumes that radar misses.
+  - **Aura (OMI, MLS, TES):** Ozone, greenhouse gases, and atmospheric chemistry.
+
+#### Active Radar vs. Active Lidar Synergy Comparison
+
+| Parameter | CloudSat CPR (Radar) | CALIPSO CALIOP (Lidar) |
+| :--- | :--- | :--- |
+| **Wavelength** | $3.16\ 	ext{mm}$ ($94\ 	ext{GHz}$, Microwave) | $532\ 	ext{nm}$ (Green) & $1064\ 	ext{nm}$ (NIR) |
+| **Scattering Particle Regime** | Rayleigh to Mie on cloud droplets & raindrops ($r > 20\ \mu	ext{m}$) | Rayleigh on air molecules; Mie on fine aerosols ($r \sim 0.1 - 5\ \mu	ext{m}$) |
+| **Thin Cirrus Cloud Detection** | Ineffective (cirrus ice particles are too small to scatter $3\ 	ext{mm}$ waves) | Superb sensitivity (picks up sub-visual cirrus down to optical depth $	au < 0.01$) |
+| **Thick Cumulonimbus Penetration** | Excellent penetration through convective cores to rain shaft | Attenuates and gets completely blocked after cloud optical depth $	au pprox 3$ |
+| **Physical Complementarity** | Lidar sees the cloud top and aerosol layers; Radar penetrates to the cloud base and precipitation floor! |
+
+---
+
+### 7.5 Visual Exam Practice Questions & Solutions
+
+**Station Question 1:**
+> *An exam station presents a profile displaying 'Total Attenuated Backscatter at 532 nm' with an intense plume originating in western Africa at latitude $15^\circ	ext{N}$, rising into the marine boundary layer up to 4 km, and traversing the Atlantic Ocean toward Puerto Rico. Identify the instrument, satellite, and phenomenon.*
+- **Instrument:** CALIOP (Cloud-Aerosol Lidar with Orthogonal Polarization)
+- **Satellite:** CALIPSO
+- **Phenomenon:** The Saharan Air Layer (SAL) / trans-Atlantic mineral dust outbreak.
+
+**Station Question 2:**
+> *An image shows a false-color composite of Lake Tahoe and surrounding coniferous forests. The forest appears bright red, while the lake water is black. An adjacent ski resort shows snow on mountain peaks. In what band combination is this image shown, and why does the lake look black?*
+- **Band Combination:** Landsat Color Infrared (CIR) False Color (Bands 5, 4, 3 as RGB).
+- **Physical Reason:** Liquid water has strong absorption in the near-infrared band (Band 5). Near-infrared photons are absorbed almost 100% within the top centimeters of the water column, resulting in zero reflectance and a pitch-black appearance.
+
+**Station Question 3:**
+> *A time-series of tropical Pacific sea surface heights shows the western warm pool anomaly falling from $+15\ 	ext{cm}$ to $-2\ 	ext{cm}$, while the eastern Pacific anomaly surges to $+25\ 	ext{cm}$. What oceanographic event is taking place, and what satellite instrument recorded it?*
+- **Event:** A major El Niño event (warm phase of ENSO).
+- **Instrument:** Dual-frequency radar altimeter (Poseidon-3B / Poseidon-4 on Jason-3 / Sentinel-6 Michael Freilich).
+- **Mechanism:** Trade wind relaxation triggers downwelling equatorial Kelvin waves that transport warm upper ocean waters eastward, raising sea level via thermal steric expansion.

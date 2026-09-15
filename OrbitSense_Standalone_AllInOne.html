@@ -1557,6 +1557,150 @@ body {
   }
 }
 
+/* ==========================================================================
+   VISUAL ATLAS & SENSOR GRAPH STYLES
+   ========================================================================== */
+.atlas-subtabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-dim);
+  padding-bottom: 8px;
+  overflow-x: auto;
+}
+
+.atlas-subtab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.atlas-subtab-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.atlas-subtab-btn.active {
+  color: var(--cyan);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.atlas-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.atlas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.atlas-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.atlas-subtitle {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.atlas-svg-wrap {
+  background: #090e17;
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin: 18px 0;
+  overflow-x: auto;
+  position: relative;
+}
+
+.atlas-svg-wrap svg {
+  display: block;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  height: auto;
+}
+
+.atlas-legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.recognition-cue-box {
+  background: rgba(56, 189, 248, 0.06);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-left: 4px solid var(--cyan);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin: 18px 0;
+}
+
+.cue-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.cue-list {
+  padding-left: 18px;
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.sample-exam-box {
+  background: var(--bg-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-top: 14px;
+}
+
 </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1589,6 +1733,9 @@ body {
         <button class="nav-tab-btn" data-tab="guided" onclick="switchTab('guided')">
           🧭 Guided Learning
           <span class="badge-count" id="guided-badge-count">12</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="atlas" onclick="switchTab('atlas')">
+          📸 Sensor & Graph Atlas
         </button>
         <button class="nav-tab-btn" data-tab="satellites" onclick="switchTab('satellites')">
           🛰️ Satellites Library
@@ -1801,6 +1948,656 @@ body {
       <div id="guided-modules-container">
         <!-- Rendered dynamically by app.js -->
       </div>
+    </section>
+
+    
+    <!-- ================= SECTION 2.5: SENSOR & GRAPH ATLAS ================= -->
+    <section class="app-section" id="section-atlas">
+      <div class="section-hero">
+        <span class="hero-tag">Visual Recognition & Image Sheet Guide</span>
+        <h2 class="hero-title">Satellite Sensor & Data Product Atlas</h2>
+        <p class="hero-desc">
+          Science Olympiad Division C exams provide an Image Sheet containing raw instrument spectrograms, 
+          lidar curtains, radar reflectivity profiles, false-color composites, and climate anomaly maps. 
+          Study what each tool looks like, its absorption spectra, measurement units, and exact recognition cues.
+        </p>
+      </div>
+
+      <!-- Atlas Subtabs -->
+      <div class="atlas-subtabs">
+        <button class="atlas-subtab-btn active" onclick="switchAtlasSubtab('spectra', this)">🌈 Atmospheric Absorption Spectra</button>
+        <button class="atlas-subtab-btn" onclick="switchAtlasSubtab('oco2', this)">🔬 OCO-2 Spectrometer</button>
+        <button class="atlas-subtab-btn" onclick="switchAtlasSubtab('caliop', this)">🛰️ CALIPSO Lidar Curtains</button>
+        <button class="atlas-subtab-btn" onclick="switchAtlasSubtab('cloudsat', this)">📡 CloudSat Radar Profiles</button>
+        <button class="atlas-subtab-btn" onclick="switchAtlasSubtab('landsat', this)">🌿 Landsat CIR & Spectral Curves</button>
+        <button class="atlas-subtab-btn" onclick="switchAtlasSubtab('altimetry', this)">🌊 Jason Altimetry & ENSO</button>
+        <button class="atlas-subtab-btn" onclick="switchAtlasSubtab('ceres', this)">☀️ CERES Radiation Budget</button>
+        <button class="atlas-subtab-btn" onclick="switchAtlasSubtab('quiz', this)" style="color: var(--amber);">🎮 Visual Recognition Trainer</button>
+      </div>
+
+      <!-- SUBTAB 1: ATMOSPHERIC ABSORPTION SPECTRA -->
+      <div class="atlas-content" id="atlas-content-spectra">
+        <div class="atlas-card">
+          <div class="atlas-header">
+            <div>
+              <h3 class="atlas-title">🌈 Earth's Atmospheric Absorption Spectrum & Optical Windows</h3>
+              <p class="atlas-subtitle">Plot of Atmospheric Transmittance (%) vs Wavelength (µm) from Ultraviolet to Thermal Infrared</p>
+            </div>
+            <span class="badge badge-cyan">Spectroscopy Foundation</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+            Earth's atmosphere acts as a selective filter. Nitrogen (N₂) and Oxygen (O₂) are transparent in the infrared, 
+            while polyatomic greenhouse gases absorb radiation at discrete molecular vibrational/rotational lines. 
+            Notice the prominent <strong>8 µm to 12 µm Atmospheric Window</strong> where Earth radiates surface heat directly to space!
+          </p>
+
+          <div class="atlas-svg-wrap">
+            <svg viewBox="0 0 900 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Background Grid -->
+              <rect width="900" height="360" fill="#0b111e"/>
+              <line x1="80" y1="50" x2="860" y2="50" stroke="#1e2c44" stroke-dasharray="4 4"/>
+              <line x1="80" y1="120" x2="860" y2="120" stroke="#1e2c44" stroke-dasharray="4 4"/>
+              <line x1="80" y1="190" x2="860" y2="190" stroke="#1e2c44" stroke-dasharray="4 4"/>
+              <line x1="80" y1="260" x2="860" y2="260" stroke="#1e2c44" stroke-dasharray="4 4"/>
+              
+              <!-- Axes -->
+              <line x1="80" y1="290" x2="860" y2="290" stroke="#475569" stroke-width="2"/>
+              <line x1="80" y1="50" x2="80" y2="290" stroke="#475569" stroke-width="2"/>
+
+              <!-- Y-Axis Labels -->
+              <text x="70" y="55" fill="#94a3b8" font-size="11" text-anchor="end" font-family="monospace">100%</text>
+              <text x="70" y="125" fill="#94a3b8" font-size="11" text-anchor="end" font-family="monospace">75%</text>
+              <text x="70" y="195" fill="#94a3b8" font-size="11" text-anchor="end" font-family="monospace">50%</text>
+              <text x="70" y="265" fill="#94a3b8" font-size="11" text-anchor="end" font-family="monospace">25%</text>
+              <text x="70" y="295" fill="#94a3b8" font-size="11" text-anchor="end" font-family="monospace">0%</text>
+              <text x="25" y="170" fill="#38bdf8" font-size="12" font-weight="700" transform="rotate(-90 25 170)" text-anchor="middle">Atmospheric Transmittance</text>
+
+              <!-- X-Axis Labels (Wavelength µm) -->
+              <text x="100" y="315" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">0.2 µm (UV)</text>
+              <text x="180" y="315" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">0.5 (Vis)</text>
+              <text x="260" y="315" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">1.0 (NIR)</text>
+              <text x="360" y="315" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2.0 (SWIR)</text>
+              <text x="470" y="315" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">4.26 (CO₂)</text>
+              <text x="560" y="315" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">7.66 (CH₄)</text>
+              <text x="650" y="315" fill="#34d399" font-size="11" font-weight="700" text-anchor="middle" font-family="monospace">8 - 12 µm Window</text>
+              <text x="780" y="315" fill="#f43f5e" font-size="11" font-weight="700" text-anchor="middle" font-family="monospace">15 µm (CO₂)</text>
+              <text x="850" y="315" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">>20 µm</text>
+              <text x="470" y="345" fill="#e2e8f0" font-size="12" font-weight="700" text-anchor="middle">Wavelength λ (micrometers, µm)</text>
+
+              <!-- Atmospheric Window Bracket Highlight (8 to 12 µm) -->
+              <rect x="600" y="55" width="105" height="235" fill="rgba(52, 211, 153, 0.08)" stroke="#34d399" stroke-dasharray="4 4"/>
+              <text x="652" y="75" fill="#34d399" font-size="11" font-weight="700" text-anchor="middle">ATMOSPHERIC WINDOW</text>
+              <text x="652" y="90" fill="#34d399" font-size="9.5" text-anchor="middle">High Transmittance (8-12 µm)</text>
+
+              <!-- Transmittance Curve (Polygon + Stroke) -->
+              <path d="M 80 290 
+                       L 110 290 
+                       Q 130 290 145 100 
+                       L 180 60 
+                       L 210 65 
+                       L 230 180 
+                       L 245 80 
+                       L 260 270 
+                       L 280 85 
+                       L 310 285 
+                       L 330 90 
+                       L 360 280 
+                       L 400 95 
+                       L 440 100 
+                       L 470 288 
+                       L 490 110 
+                       L 530 120 
+                       L 560 275 
+                       L 580 140 
+                       L 610 70 
+                       L 630 170 
+                       L 650 70 
+                       L 690 80 
+                       L 730 285 
+                       L 780 290 
+                       L 820 285 
+                       L 860 288" 
+                    fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <!-- Absorption Notch Markers & Molecular Tags -->
+              <!-- UV Ozone -->
+              <rect x="85" y="250" width="35" height="20" rx="3" fill="#f43f5e"/>
+              <text x="102" y="264" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">O₃/O₂</text>
+
+              <!-- Water Vapor 1.4 µm -->
+              <text x="260" y="250" fill="#60a5fa" font-size="10" font-weight="700" text-anchor="middle">H₂O</text>
+              <!-- Water Vapor 1.9 µm -->
+              <text x="310" y="265" fill="#60a5fa" font-size="10" font-weight="700" text-anchor="middle">H₂O</text>
+              <!-- CO2 4.26 µm -->
+              <rect x="455" y="250" width="30" height="18" rx="3" fill="#a855f7"/>
+              <text x="470" y="263" fill="#fff" font-size="9" font-weight="700" text-anchor="middle">CO₂</text>
+              <!-- CH4 7.66 µm -->
+              <rect x="545" y="240" width="30" height="18" rx="3" fill="#fbbf24"/>
+              <text x="560" y="253" fill="#000" font-size="9" font-weight="700" text-anchor="middle">CH₄</text>
+              <!-- Ozone 9.6 µm inside window -->
+              <rect x="618" y="145" width="24" height="16" rx="3" fill="#f43f5e"/>
+              <text x="630" y="157" fill="#fff" font-size="8.5" font-weight="700" text-anchor="middle">O₃</text>
+              <!-- CO2 15 µm massive notch -->
+              <rect x="745" y="250" width="70" height="20" rx="4" fill="#f43f5e"/>
+              <text x="780" y="264" fill="#fff" font-size="10.5" font-weight="800" text-anchor="middle">CO₂ (15 µm)</text>
+            </svg>
+          </div>
+
+          <div class="recognition-cue-box">
+            <div class="cue-title">🎯 Test Recognition Cues for Atmospheric Spectra:</div>
+            <ul class="cue-list">
+              <li><strong>The 8–12 µm Window:</strong> Look for the wide gap of high transmittance (~80%) centered between the 7.66 µm methane dip and the huge 15 µm CO₂ valley. The small notch inside the window at <strong>9.6 µm</strong> is caused by <strong>stratospheric ozone (O₃)</strong>!</li>
+              <li><strong>CO₂ Fundamental Bands:</strong> Always identify <strong>4.26 µm</strong> (asymmetric stretch) and the broad <strong>15 µm</strong> notch (bending mode). AIRS on Aqua and CrIS on Suomi NPP use these bands for atmospheric temperature sounding.</li>
+              <li><strong>Water Vapor ($H_2O$) Notches:</strong> Recurring absorption dips at 0.94 µm, 1.13 µm, 1.4 µm, 1.9 µm, 6.3 µm, and continuous absorption beyond 15 µm.</li>
+            </ul>
+          </div>
+          <div style="margin-top: 16px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 14px; border: 1px solid var(--border-dim);">
+            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cyan); margin-bottom: 8px; font-weight: 700;">🛰️ NASA Reference Diagram: Atmospheric Gas Absorption Spectra</div>
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAUAB4ADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiloASiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoopaAEooooAKKKKACiiigAooooAKKKKACilpKACilpKACilooAKSlooAKKSigBaKSloAKSlpKACiiigApaSigAopaSgAooooAKKWkoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACilpKACiiloASlopKAFpKKKACiiigAopaSgBaSlooASiiigApaSloAKKKKACiiigAooooASloooAKKKKACiiigAooooASilooAKKKSgAopaSgAopaSgApaSloASiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKWgBKMUUtABSUUUAFFFLQAlLRRQAUUUUAFFFFABRRRQAUUUUAFJS0lAC0UUUAFFFFABRRRQAUUUUAFFFFABSUtFABRRRQAUUUUAJS0UUAFJRS0AJRS0UAFJRS0AFJS0lABRS0UAJRS0lABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFLSUALSUUtABSd6WkoAWikpaACiiigAopKWgAopKWgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKSlooAKKKKACiiigApKWkoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAWkpaKACkpaKACiiigAooooASloooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiimAUUUUgCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACkpaKACiiigAooooASilpKACilpKACiiigAopaSgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAWiikoAKKKKYC0UUUgEpaSloAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigBKWkpaAEoopaAEopaSgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiimAUUUUAFFFFIBaKSloAKKSloAKO1FFABRRRQAUUUUAFFFFMAooopAFFFFABRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAJRS0lABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUtACUUUtACUtFJQAtFFFABRRRQAUUUUwCiiigAooooAKKKKQBRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFJS0UAFFFFABSUtJQAtJS0UAJRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUtJRQAUtFFABRRRTAKKKKQBRRRQAUUUUAFFFFMAooooAKKKKACiiigAooooAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKACiiikAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAJS0UUAJRS0lAC0lFLQAlFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFABRRRTAKKKWkAlLRRQAUlLRQAUUUUAFFFFABRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiikAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUAFFFFMAooooAKKKKQBRRRQAUUUUwCiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUlLRQAUUUUAJS0UUAFJS0lABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKQBRRRTAKKKWkAlFLRTAKKKKACiiikAUUUUAFFFFMAooooAKKKKACiiigAooooAKKKKACiiikAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRTAKKKKQBRRRQAUUUUAFFFFMAooooAKKKKQBRRRQAUUUUAFFFFMAooopAFFFFABRRRTAKKKKQBRRRQAUUUUAFFFFMAooopAFFFFABRRRQAUUUUAFFFFABSUtFACUtFFACUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUwCiiikAUUUUwCiiigAooooAKKKKACiiigAoopaAEpaSigBaKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRTAKKKKACiiigAooooAKKKKQBRRRTAKKKKACiiigAooopAFFFFMAooooAKSlopAJRS0lABRS0lABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKQC0UUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopAFFFFMAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopAFFFFMAooooAKKKKACiikpALRSUtACUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFABRRRTAKKKKACiiigAooooAKKKKAClpKKACilooAKKSloAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBSUtFMBKWkopALSUtJQAUUUUwCiiigAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiloAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRTAKKKKACiiigAooooAKSlopAJRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUwCiiikAUUUUwCiiigAooooAKKKKACiiigAooooAKKWkoAWiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAEpaKKQCUUtJTAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKWgBKKWigAopKWgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKWkoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAEooooAKKWkoAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUAFFFFABRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKWgBKWiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKWgBKKKWgBKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiikoAKKKKACiiigAooooAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAFooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKWgBKWikoAKWkpaACiiigApKWigAoopKAFpKWigBKKWkoAKWkpaAEooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApKWkoAWkpaSgAooooAKKKKACiiigAooopAFFFFMAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFMAooopAFFFFMAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAFopKWgBKWiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKWkpaACiikoAWiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKSlooAKKKKAEpaSigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigBKWiigBKKWkoAKKKKACiiigAooooAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiigAooopAFFFFMAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigBaKSloAKSlooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApaSloASlpKKAFooooAKSlooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigBKWiigAoopKAFpKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApKWkoAWkooNABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUtJRQAtFFJQAtFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUtJQAUtFFACUtFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQIKKKKBhRRRQAUUUUAFFFFABRRRQAUlLRQAlFLRQAlFLRQAlFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAlFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopgFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRS0UAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRiigApaKKAEpaKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKBBRRRQMKKKKACiiigAooooAKKKKAEopaKAEopaSgAopaSgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAEopaKAEopaSgAooooAKKKKACiiigAooooAKKKKACiiikAUUUUAFFFFMAooooAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKWgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKWkpaACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiloASiiigAooooAKKKKACiiigAooooAKKKKBBRRRQMKKKKBBRRRQMKKKKBBRRRQMKKKKBBRRRQAUUUUDCiiigAooooASilooASilpKACilpKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooASilooASiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiloASilooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooEFLRRQMKSlooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKXFACUUuKMUAJRS0UAFFFFABRRRQIKKKKAEopaKAEooooGFFFFAgooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigYUUUUAFFFFABRRRQAlFLRQAlFLSUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABSUtFACUUtFACUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUtABRRRQAlLRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFLSUAFLRRQIKKKKACiiigYUUUUCCiiigAooooAKKKKBhRRRQAUUUUAFFFFABRRRQAUoBNJTk689KANC10szwiZnAUnHFbEPh+zKgmV2P5VlW0+MY6e1bME5JXn9etZSbLSRei8O6ZxlHP1arieGNIcg+U/Ts1QRXO489auw3ZB4rJ3NEkKPBejyjA85T7HNNl+G1tIm6G9ZD6OtXUvnrQttRcEAk81N5LZj5UcTefDrVYOYfLmHba3Nc1eaRfWDlbm2kjI9Vr3FLwuMmnTCK4jKSRI6ns4zmmqsluJ009j5/KkUlex6j4G0jUFLxqbaQ906flXF6z4B1PTUMsIFzEO6dQPpW0a0XuZum0chRT5InjYqykEdjTK1ICiiigQUUUUAJRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUDCiiigAoopKACilooEJRS0lAwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACkpaKAEopaKAEopaSgAooooAKKKKACiiigAooooAKKKKACiiigAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiloASloooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooEFFFFABRRRQMKKKKBBRRRQAUUUUAFFLRQAlLRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUoFJSjrmgC9bJkDHU9K1YAygE1j2kgEy7chhyPrWxC3GKzkaRL8bdOc1pJt3rsO5SO/WsuIAbfc8VpxYELheHz8p9KyZaLqLn2qyjDAx271VV/lPqKekoDd8VJZtRTBdoJ4xzVuKc4PTOeDWQkoYgD86nWcIcMMVLQzcBWSIdnB7HrT45HBAI3DpVG2kDqpWrIfcy7evc1BRn6v4Y0rWgfMh8qdhxKgxz715n4h8HahoTl2Qy2xPyyoOPx9K9nQhsE4z3qd0VkaKZFkhcYKsMgiqjNx2JlBSPm0jBpK9L8WfD8ASX2jKWQZL2/cfT1rzd42RirAgjgg11wmpLQ55RcdxlFFFWQFJS0UAJRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQMKKKKBBRRRQAlFLSUAFFFFAwooooEFFFFABRRRQMKKKKBBRRRQMKKKKBBRRRQMKKKKACiiigAooooAKKKKACiiigAooooASilpKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiloEJS0UUAFFFFABRRRQMKKKKBBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUtFACUtFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUtACUUtFACUUtFACUtFFACUtFFABRRRQBJEoY8nHFasEzblJ6jofeslDg1oQZ45527vwqZFI2IJC1xEvITdkmtPzlSKPd1GelYlsxMi7TyOg9auTTBpQwHGOlZNGiZpx3itjqKsq6Pgk4rHjcEZqzG5yKmxVzTE5DADoKvKpkQMO4rILe/arttf7VVHGR61LQ0zXtPMC/KcVrwk7eQM+1Zdoyuw461pRhlOfbrWbLRaVT94dMc1aRwyANzxxVZJgTz0aptyrINh4FSMcGKv6VxfjXwMmoRPqelxgXON0kSjh/ce9diJR5rbh8uasxzAHg9Kabi7oTSasz5qkjaNyrKQwOCDTK9Z+IHgxbiKTWdNj/AHgG64iUdR/eH9a8nYEGu2E1JXOaUeV2EoooqyAooooASilooASilooASiiigAooooAKKWkoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigBKKWigBKKWkoAKKKKACiiigAooooGFFFFABRRRQAUUUUCCiiigAooooAKKKKBhRRRQAUUUUAFFFFABRRRQAUlLRQAlFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooopgFFFFIAooopgFFFFIAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAgooooAKKKKBhRRRQIKKKKBhRRRQIKKKKBhRS0lAhaKSloAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoopaAEpaSloASloooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoopaACkpaKACiiigAooooAKKKKACiiigAooooAKKKKAHp8ze9XbdgP8APaqSY59elTxnA61LKRqxZD5HVasKcEq3BqpZB2WQMcE8gH+dWJHy4x6Vmyy2hxgDpVqMjIrOiY59qvQH5x6VLKRc3fLTsDG4VAamj4Q1IzX02YL0JznpW+t2NgPYdPcVyNnIRL1worY+0YT1FS0UmbkcgZSV5x6UIzbASSDmsq1vlt8qeQwrYtXjnQAnBPY1DVikPeYRFi3Ibp+VV472RJBIcEA9Kv3dkWg3YJx0rBfchIPBHahagzobO+ErEHBU8YPp6V5P8QfCv9i6j9stEP2G5JK4/gbutdrFM8MwZSc1uXlpBr+gTWcwykq8E9VbsfzqovkdxSXMj53oq3qFlLp99NazqVkiYqRVSuxO5ysKKKKYgooooAKKKKACiiigApKWigAooooASloooASilooASilooASiiloASiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACkpaKAEopaKAEopaSgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigYUUUUCCiiigYUlLRQIKKKKBiUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUCCiiigAooooAKKKKACiiigAooooAKKWigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoopaAEopaKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACilooAKSlooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAzirNuu6QFh8g5I9argZOKsQtkY7/zpMaNQuoZSpOAOhPSnocSK3JXHSqSS5Yn1qzE/G09KzsXcuwKGXrg9quQxPn5Ru9xUCRIqZUg8A4qzZySK+VODjGKllIlAbuDkU5RJliRwvUU6WXbncRvx29arK7Els9etJDLgcY+Xg1aiuSB81UYhu5FTFsALjmkCZcMu45z05ra068EsQ3H5h1rmlyOhq1DlfmViCemKlq5SZ3dr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UtFACUUtFACUUtFABRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopaKAEopaKAEopaKAExRS0UAFFFFABRRRQAUUUUAFFFFAEgOQvPTjFWrZR5qSNwMj8RVIDPTrVy2J8kK3OGyPpUsaNWdTKWOOckIRWmjHIOfY+9ZNtnKFSfl7VpxELkHsT+NZM0RoQkEL6nvV6GUsgjk4Zc7fcdqpIyDbjn1zUyHfICD93gioLRrW7ZGCeeprVEguJo8gBgB+OKxIGyCP4hWgr/ADROp5zn6e1QykT6jHtdgBgVm4O73rVY+eSG59KqPAjTeWAcdA1JMB1hN/pQVumCK0XdvOQBvkxnB9aopZiJBIWwwq6qb4c+tJjQSylZB6e3pU9pbvIFkTsec0w27PF81aFkBFEI8+9IZAkWyZiK07Jc7Qx4ByaqbRvYnvUss62thPMxwI42cn6DNSxnz/4hmFx4i1GUdGuHI/M1l1LPIZZ5JD1dix/Goq9FKyON7hRRRTEFFFFABSUtFACUUtFACUUtFACUUtFACUUtFACUUtFACUUUtACUUtFACUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiigApKWigApKWigBKKWigBKKWkoAKKKKACiiigAooooAKKKKACiiigAooooAKSlooAKSlooASilpKACilpKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApKWigBKKWigBKKWkoAKKKKACiiigAooooAKKKKACilooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoopaAEoopaAEopaKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoopaAEopaKAEpaKKACiiimAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRS0AJRRS0AJRS0UAJRS0UAJRS0UAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFLSUAFFFFACrwwz0zzViMss5C8rnp7VXqdSAinvSY0a8MmIBtOCpzn2q+p35GOSeT6+9ZkS7flIOzht46EdxWjFgxxMhyOox3rJmiNGEFlIX7x4APTNXoE8xWdQc9T2zziqdqhCjdzn5hn37VcSTYmAc8YFZspE0MucHPIkx9a07dWMmM5Q9KzYIwx3dPmDc+talsWt33Dpk8VLKRe4SLbyX9abGmdzkcjvTEk3jrnn8amL8lO+KkoewJAXrmrkaAjC8Y5qrEpYZ756GrMG5SCOR3zUsZcjTcOn8NTwwkHJHSpYIwyLJjApzgxgk9T0FSMiZMbj6dKwvGN0bLwbfyk4aRPKX8eK3Zhtj2g5bvXnnxW1IJZafpiPktmZx+gq4K8kiZu0WeWGkoorvOQSilpKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApKWigBKKWigBKKWigBKKWigBKKWigBKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiikAUUUUwCiiigAooopAJRS0UAJRS0UAJRRRQAUUUUAFFFFABRRRQAUUUUAFJS0UAFFFFACUUtFACUUtJQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFACUtFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFLRQAlFLRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUtACUUtFACUtFFABRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACilooASilooASilooASlxRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFLRQAlFLRQAlFLRQAlGKWigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKmAEkSgcFeDUNPSRkztPXr70gNfTZBIUsmbYD1Y9PWr9iGjRBIgRkkIXPRqyYFMMCvgF5Bux7VrQOl5p0KsCAp3cdeuazkaI0428v6AlqnTLYGOM5471XQmQheuTx9atcxmHA3Kz7iR6YrMsvwHK8cMeAfarsWSXPO1BnjvVFnDgbcgDp9cVZjbJBUkZ+9UspFsEiTAP8ADU6MWcknk1Wgcs2AvXg1aiQBs8EntUsouxvuVAwxjoRViJPnBzxniqiNzj8KuQxnzeWwF5qGM10kzGqH7gwc0T3CGbAHygYzVNZ1bI6AfrTUIx1zSGTNKEBkfoPWvCPF2rHWPENzcA5jU+XH/ujivTvGeuDTdAlCNiaXMcf1PU/lXixOTmuihH7RjVl0G0UtJXSYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRiiigBKKWigApKWigBKKWigBKKWigBKKWigBKKWigBKKWigBKKKWgBKKKKACiiigAooooAKKKKACiiigAooooAKKKKAEpaKKAEopaKAEopaKAEopaKAEoooxQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUgEopaKYCUUtFIBKKKMUAFFFFABRRRQAUUUUAFFFFABRRRQAUlLRQAlFLRQAlFLSUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUtFACUUtFACUtFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFLQAlFLRTASilooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiloASilooASilooAKKKKACiiigAooooAKKKKACiijFABRRRigAopaKAEopaKAEopaKAExS4oooASloooAKKKKACiiigAooooAKKMUUAFFFLQAlFLRQAlFLRQAlFLRQAlFLRQAlFLRQAmKMUtFACUtFFABikxS0UAFGKKKACjpRSgE5x2GaANG3kMsAR1wwGEYVqWoCRRAqdkJOcdT61hW02w/Om6M8ECt3T2KxIjsSzR703dx7+9ZyRcS/bHCbs5Xqp9u1XYmJAGeOnNZyJJEqzIMndt8vsRxzWlJta3URqCZFxj/arNlo0FA2bMbRgc+9WolVcFifUVnpIDtjUliiAEnucVfV94C8YxUFoso4LfKMA1dgGXJx71UiiyMlue1X4Id4HIxnrUMonRBlk289cn+VSu5XAHfgmmSSoH684wP8aYpaVwAPpUjJV5BA60/wAzYx55xUZcQgE9emK5bxrr/wDZunm0iYC7uByR/Cvc01FydkJuyucX4x1o6tq7IjZt4Monue5rnKUnJzSV3RVlY5W7u4UUUUxBRRRQAUUUUAJS0UUAJRS0UAJRS0UAJRS0UAJRS0UAJRS0UAJRS0UAJRS0UAJRS0UAJRS4pMUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABSUtFACUUtFACUYpaKAEopaKAEopaKAEooooAKKKKACiiigAooooAKKKKACkpaKAEopaKAEopaSgAooxRigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAEopaKAEopaKAEopaTFABRRRSAKKKKACiiigAooooAKKKKACiiigBKKWigBKKWkoAKKWigBKKWigAooooAKKKKACiiigAooooAKKKKYBRRS0AJRS0UAJRS0UAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFLRQAlFLRQAlFLRQAUUUUAFFFFABRRRQAUUUUAFFLRQAlFLRQAlFLRQAlFLRQAmKWiigAooooAKKKKACijFGKACilooASilxRQAlFLRQAlFLRQAlLRRQAUUUUAFFFFABRRRQIKKKKBhRRRQAUUUUAFFFFAgooooAKKKKACiiigAooooGFFFFAgooopgFFFFABSgkHIOKSikBPbcOTntWtC5ih+Y/u9vSsVGKnjvxWurEoiP97ACnHDHPQ1MkXE2BuiuUgIyDGGBB47f41ciRxGjxtliQQO3WqMDk3bynB3A7V/ug46VdgARFRTwM9axZoi9EMkYYYYZx3q7CpLKo6niqsODtJ6rxmrkXLkEgYPHoahlIuw7tzDbgA8H1q3DwvBznNVITsk3E/eG0L/WrUKlWPp/d9ahlEysrlSy9OM1OZth+T5cDqewqKOLBJwQCelV9Tu7awtXuLqTYifmx9BSGVtY1WHTLFruY4HRFzyx9K8j1G/m1K9kup2y7n8APQVb13W59ZvDI+ViXiOPPCj/Gsk11U6fKrs55zuFJS0lamYUUUUwCiiikAUUUUwCiiikAUUUUAFFFFMAooopAFFFFMAooopAFFFFABRRRQAUUUUDCiiigQUUUUDCiiigAooooAKKKKACiiigAooooASloooASilooASilooASiloxQAlFLRQAlFLSYoAKKKKACiiigAooooAMUlLRQAlFLRQAlFLRQAlFLRigBKKKKACiiigAooooAKSlooASilooASilooASiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAMUUUUAFJS0UAJRS0lABRRRQAUUUUAFFFFIAooooAKKKKYBRRRQAUUUtACUUtFACUUtFACUtFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRS4oASiiloASilooASlxRRQAUUUUAFFFFABRRRQAUUYpaAEopaKAEopaKAEopaKACiiigAooooAKKKKBBRS0mKACilooGJRS0UCEopaKACiiigAooooAKKKKACiiigAooopgFFFFIAooopgFFFFABRRRQAUUUYoAKKKWgBKKXFFACUUuKKAEopaKAEopaKAEopaKAEopaKAEopaKAEpaKKACiiigAxRiiigAoxRRQAUUUUAFFFGKAFHtWhuLwRyKPnBKkD/CqKYDjPAqUfvJQidSfzqWNHQWrLL5WQGIAQZ4OOOD+PetS3AaV+WGT0b+FsDj6VixOgvA0pVZhtVxjB9CcflW1aK23MhxKuVOPSsZGqNGEgnaP8mrsA3biMZHUelU4Y5I5oioBGck54FattF8xUDr6VmzRE8MZfBIztq6kWz1yarQSoiuWGDnAP0rE1nxlbacjRQstxc+in5V+pqbNuyG2lubWp61baLatLcS/NztUdSfavKdc1251q7Msp2xg/JGDwo/xqrqOpXOp3LT3Uhdj0HYD0AqnXTTpqOrMJzuFFFFamYlFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABiiiigBKKWigBKKWigBKKWigBKKWigBKKWigBKKWigBKKWjFACUUuKKAEopaSgAooooAKKKKACiiigAooooAKKKKACiiigAooopAFFFFABRRRQAUUUUAFFFFABRRRQAlLiiigBKKWigYlFLRQAlFLiigBKKKKACiiigAooooASilooASilooASilooASiiigAooooAKKKKAEopaKAEopaKAEopaKAEopcUlABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABSUtFACUUtFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUtFACUUtFACUYpaKACiiigAooooAKKKKACilooASilooASloooEFFFFAwooooEFFFFABRS0UAJRS0UAJRilooASloopgFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUuKKAEopaKAEopaKAEoxS0UAJS0UUAFFFFABRRRQAUUtGKAEopaKAEopaKAEopaKAEopaKAExRS0UAFJS0UAJS0UUAFFFFABRRRQAUUUUAFFFGKACijFLQAlFLijFACUUtFACUUtGKAEp8ZKyKw4IOc02nK5HBwRjGDQBtWcpuLnz2+cbwrsByFPf610NmrrCnmqWEnyxuo6L7/AONcnYXv2bbuZQm75h34rSuvEcLWf2eC3P8AvMcd6ylFt6Gikkdjbjy/nYZ+XOO272qO41zTtOi3yXA3t8xiTls/h0rgbrXb+6TY05SPGNicDFZxJPWkqXcbqdjoNY8V3eoZihJgg6BQeSPc1z5JJ5pKK1UUtjNtvcKKKKYgpKWigBKKWigBKKWigBKKWigBKKXFFACUUtFACUUtJigAooooAKKKKACiiigAxRRRQAUUUUAJRilooATFFLRQAmKKWigBKKWigBKKWigBKKWigBKKWigBKKWigBKKWigBKKKKACiiigApKWigBKKWigBKKWigBKKWigBKKWigBKKWkxQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFJS0UgEopaKAEopaKAEopaMUAJRRRQAUUUUAFJS0UDEopaKAEopaKAEopaTFABRRRQAUUUUAFFFFACUUtFACUUtFACUUtJQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFLQAlFLRQAlFLRQAYooooAKKKKACiiloASilooEJRS0UAJS4oooGFFFFAgooooAKKKWgBKKWimAlFLRQAlLiiigAxRRRQAUUUUAFFFFABRRRQAUUUUAFFFGKACijFLQAlFLRQAlFLRQAlFLRQAlGKWigAooooAKKKWgBKKWigBKKWigBKMUtFACYoxS0UAFGKKMUAFFFLQAlFLRQAlFLRQAlFLRQAlFLRQAmKXFFFABRiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUCCiiigAooooAKKKKACiiigAooooAKKKKACiiigAoopaAEopaKAEopaKAEopaMUAJRRiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKBhRRRQIKKKKACiiigYUUUUAFFFFABRRRQAUUUUgExRilopgGKMUUUgExRS0UAJRS0UAJRS0UAJRS0UAJRS0UAJRS0UAJRRRQAYoxRRQAUYoooASilooASilooASilooASilooASilpKACiiigBKKWigBKKWigBKKWigBKKMUYoAKKKKACiiigAooooAKKKKACiiigAooooAKSlooASilooASilopAJRS0lABRRRQAUlLRQAlFLRQAlFLRQAlFLSUDCiiigAooooASilooASilooASilpMUAFFFFABRS0UAJS0UUAFFFFABRRS0CEopaKAEopaKAEopaKACiiimAUUtFACUUtFACUUtFACUtFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRS0UAJRS0UAJRS0UAGKMUUYoAKKMUuKAEopcUUAJRS0UAJRilooAMUUUUAFFGKXFACUUYpaAEopaKAEopaKAExRilooATFLRRQAUUUUxBRRRQAUUUUAFFFFABRRRQAUUUYoAKKMUuKAEopcUYoASilooASilooASilooASilooASiloxQAYoxRS4oATFFFLigBKKXFGKAEopaKAExRS4oxQAlFLRQAlFLRQAlFLRQAlFLRQAlFLRQAlFLRQAlFLRQAlFLRQAmKWjFFABRRRQAmKKWigBKKWigBKKWigBKMUtFACUUtFACUUtFACUUtFACUUtFACUUtFACUUtFACUUtFACYopaKAEopcUYoASjFLijFACYpMU7FJQAmKMUtFACYopaKAEopaKAEopaKAEopaKAEopaKAEopaKAEopcUmKACilpKACiiigAooooAKKKKACiiigAooooAKKKKBhSYpaKAEoxS0UgEopaKAEopaKAEopcUUAJRRiigAxSYpaKAExRS0UAJRS0UAJRS0UAJRS0lACUYpaKAEopaKAEopaKAEopaKAEooooAKKKKACiiigAooooAKKKKACkpaKAEopaKAEopaKAEopaTFABRRRSAKSlooASilooASilooASilpKAClxRRQAUUUUwCijFLQAlFLRQAlFLRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRigAopaKAEopaKAEoxS0UAJiloooAKKWigBKKWigBKKWigBKWijFABRRilxTASilooASilooEJRS0UAJRilooAKKKKACiiigAooooAKKKKACijFLQAlFLijFACUUtFACUUtFACUUtFACUUtGKACijFLigBKKWigBKKWigBKKWjFACUYpaKAExRilxS4oASiloxQAlFLiigBKKWigBKKWigBKKWigBMUUtFACUYpaKADFJS0UAJS0UUAFFFFMAooooAKKKKACiiigAooooAKKKMUAFFFFABRRijFABRRijFABRRilxQAlFLSYoAKKWkxQAUUUYoAKKMUYoAKKKMUAFFFFABRRRigAooxRigAooxRigAooooAKKKKACiiikAUUUUAFFFFABRRRQAUlLRQAYpKWigBKKWigBKKWigBKKWigBKKWigBKKWigBKKWjFACUUuKMUAJSYp1JQAmKMUuKKAEopaKAEopaKAEopaKAEopaKAEopaKAEpKXFFACYopaKAEopaKAEopaKAEopaKAEopcUlABRRRQAUUUUAFFFFABRRRQAUlLRQAlFLRQAlFLRQMSiloxQAlFFGKAEopaKQCUUtFACUUtFACUUtGKAEpMUuKKAExRS0UAJRS0UAJRRijFABRRRQAUUUUAFFFFABRRRQAUUUUAJRS0UAJRS0UAFFFFABRRRQAUUUUAFFFFABRRS0AJRS0UAJRilooASlopcUAJRS4ooASilooASilooASlopaYCUUtFACUUtFAhKKWigBKMUtFABRRRQAUUUUAFFFFABRRRQAUUtFACUUtFACUUuKKAEpaKWgBuKXFLiigBKKWjFACUUtFACUUtFACUUuKWgBtLS0UAJRS0UAJRS0UAJRS0UWATFFLRTAKSlooAKKKKACijFGKACilooASiloxQAlFLRigVxKKWjFACUUuKMUAJRTsUUWAbRinUUAJiiloxQAmKKWjFMBKKXFGKAEoxS0YoASjFLijFACYopcUtADcUU6igBuKMU6igBuKWlooC43FFOooATFJTqKAG4paWigQmKMUtFACUYpaKAuJijFLRRYLiYoxS0UBcSjFLRRYLiYopaKAEopaKLDEoxS0UWATFGKWigLiYopaKAExRilooASjFLRRYBtLilooAbilxS0UANoxTqKAG0Yp1GKAG0Yp1FADaMUuKWgBtGKdikxQAlGKXFGKVgEoxS0YoASjFLijFACYpKdiiiwDaKdijFADaKWjFACUUuKMUAJRS4oxQAlFLRigYlFLRQAlFLijFACUUuKTFABRRRigAooooAKSlooATFGKWikAlFLRQAlFLRQAlFLRQAlGKWjFACYpKdikxQAlFLRigBKKXFFACYopaKAExSU7FJigBMUUuKMUAJRS4ooASilooASilxRQAlFGKKACiiigAooooAKSlooASilooASilooASilooASjFLSYoGJiilopAJRS0UAJRS0mKACijFFACUUtFACUUtFACUUtFACUUYooAKXFFGKADFFGKWgBKKWigBKKWimISlopcUAJRRiloASilooASjFLRQAlFLRQAUUUUAFFFGKACijFLQAlFLRQAlFLRQAlFLRigBMUYpcUuKAExRS4oxQAlFLRQAlGKXFFACYpcUuKKAExRS0UAJRS0UwEopaKACkxS0UAFFFFAgooxS4oASilxRigBKKXFGKAEopaMUAJRinYoxTAbilxS4oxQAlGKXFGKAExRilxRigBMUUuKWiwXG0uKWiiwriYoxS0UWATFGKWiiwCYoxS0YoATFFLijFACYpaMUuKYDcUtLijFAXEopcUYoASilxRigBKKXFGKLAJRS4pcUWENop2KMUANop2KMUWAbRTsUYoAbiinYoxQAmKTFOxRigBMUYpcUYosAmKMU7FJimAmKMUuKMUAJijFLiloAbijFOxRRYBuKMU6iiwDcUYp2KKLANxRinYoxRYLjcUYp2KKLBcbijFOoxRYBuKMU6jFFgG4oxTsUUANxRinYoxRYBuKMU7FGKLANxRinYooAbijFOooAbijFOooAbijFOxRigBuKMU7FJiiwCYoxS4oxRYBMUYpcUYoATFGKXFGKQDaMU7FGKAG0Yp2KMUWAbRTsUYosA2inYoxRYBtFOxRiiwDaKXFGKLAJRS4oxRYYlFLijFFgEopcUYosAlFLijFACUmKdijFADcUYp1FADaMUtGKVgExRiloosAlFLRRYBMUYpaKLAJiiloosA2inUUDG0U6kxQAmKKXFGKAExRilxRQA3FGKdijFADaKdijFIBtFLiigBKKXFGKAEopcUYoASijFGKACjFFFAwxSUtFACYopaKAEopaKQCUmKdRigBuKKdikxQAlFLiigBKKWigBMUlOoxQAmKSlxRigBKKXFFACUUtFACUUtJQAUUUUAFFFFACUUtFACUUtFACUUtFACUUtFADcUUtGKAEopaKACilooAMUUUUAFFFFABRRRQAUUYpaAEopaKAEopcUYoASjFLiloASilooASilooASlxRilxQAmKKXFFMBKKWigBMUUtFACYpcUUUCuGKKKMUWAKKXFGKdgEopaKAEoxS4oxQAmKMU6jFACUYpaKBXEopcUYosAmKMUuKWiwDcUuKWiiwCYoxS0U7AJijFLRQAmKKWiiwXDFGKMUuKLBcTFFLijFFhXEopcUYosFxKKXFLigBtFOxRimA2lxS4oxQFxKKXFGKLBcTFGKdijFFguNxRinUUWC42lxS0UWC4mKMUtFFgExRilxS4osIbijFOxRiiwDcUuKXFGKYDcUuKXFGKLAJRS4oxQFxKMUuKXFFgG4op2KMUWC42inYoxRYLjaMU7FGKLBcbijFOoxQFxMUYpaMUWATFGKdikxQITFGKXFLigBuKMU7FGKAG4oxTsUYoC43FGKdijFADcUYp1GKAG0Yp2KMUANxRinYoxQA3FGKdijFACYpMU7FGKYXG4oxTqMUguNxRinYoxQA3FLilxRigBuKXFLijFADcUYp2KMUBcbijFOxRigBuKMU7FFA7jcUYp2KMUCG4oxTqMUANxRinUYoGNxRinYoxxQA3FGKdijFADcUYp2KMUANxRinYoxRYLjMUYp2KMUWC42jFOxRiiwXG0U7FGKLANop2KMUBcbRTsUYosFxtFOxRigBtFLijFFgExRilxRiiwDcUuKXFGKLANxRinYoxSAbijFOxSYosFxMUYpaKLBcTFGKWiiw7iYpMU6iiwXG4oxTqMUWC42jFOoxRYBuKMUuKMUWC43FGKdijFAXG0U7FGKLANop2KTFKwCUUuKMUWC4lFLijFFguJiilxRiiwxMUmKXFGKLAJijFLRQAmKMUtFFgExRilopANxRTsUYosA3FGKdikxQAlGKXFGKLDuJikxTsUYoAbRTsUmKAEopcUUWASiloxSsAlFGKMUAFGKMUUAJijFLRQMSilooASjFLRQA3FGKdikxSASilooATFGKWigBMUmKdSYoASilooASilooASilxRigBKKKKADFLijFLQAlFLRQAlFLijFMBMUtFLQAlFLRQAlGKWigQmKMUtFFgCiiigAopaMUwEopcUUAJRS4paBXG0Yp1FFguJRS4oxRYBMUU7FFOwXG4op1FFguJijFLRRYLiYoxS0UWFcKKWjFFguJRS4oxTsFxKKXFGKLBcSj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aAI9tGKkxRtoAixRtqTbRtoAixRipMUYoAj20m2pMUYoAj20mKlxSbaAI8UbakxSYoAj20m2pdtJigCPFJtqXFJigCPbRipNtJigCPbRtqTFJtoAjxRipMUYoAixRipNtGKAIsUYqTFGKQEe2kxUmKNtAEeKMVJikxQMjxRipMUmKAI8UYqTFJtoAXFGKfilxTEM20Yp+KXbQAzFG2n4pcUAMxRin4pdtADMUYqTFG2gBmKMU/FLigQzFGKfilxQAzFGKfil20AR4pcU/bS7aAGYo20/FLimBHilxT8Uu2gBmKNtPxS7aAGYo21Jto20WAZijbT9tLtosBHil20/bS4osBHtpcU/FLtosBHtpdtP20u2iwEeKXbT9tLtoAjxRtqTFG2nYBm2jbUm2jbRYBm2jbUm2jFFgI9tLtqTbRtosIj20u2n4pdtFgI9tG2pNtLtosBHtoxUm2jbRYBmKMVJtoxTsBHtpdtP20u2iwEe2jbUm2l20WAi20u2pNtG2iwEeKXbUm2jbRYCPbRtqTbS7aLAR4o21Jto207AR7aXbUm2jbRYCPbRipNtLtosBFtpdtSbaNtFgI8Ubal20baLARbaXbUm2jbRYCPbRtqXbRtosBHto21JtpdtFgIttG2pdtG2nYCPbRipNtG2iwiPbRipNtLtosBFto21Lto20WC5HijbUm2lxRYLkW2l21Jto20WC5Hto21JtpdtFguRbaNtS7aNtFguRbaXbUm2jbRYLke2jbUm2l207Bci20bal20baVguRbaNtS7aNtOwXI9tG2pNtG2iwXI9tG2pNtLtosFyLbRtqTbS7aLBci20bal20baBXI9tJtqXbRtoHcj20bak20baAuR7aNtSbaNtAXI9tG2pdtG2gLkW2jbUu2k20CuR7aNtS7aTbQFyPbRtqTbRtoC5Hto21Jto20Bcj20bak20baAuR7aNtSbaNtAXI9tJtqXbRtoC5Fto21Lto20ARbaNtS7aNtAXIttG2pNtG2gLke2jbUm2jbQBFto21Lto20WGRbaNtS7aNtFguRbaNtS7aTbRYLke2k21Lto20WC5Fto21Lto20rARbaNtS7aTbRYLke2k21Lto20WC5Fto21Lto20WC5Fto21LtpNtFguR7aTbUu2jbRYLkW2jbUu2jbRYLkWKNtSbaNtFguRbaNtS7aNtFguRbaMVJto20WC5Fto21LtpNtFguR7aNtSbaNtFhkW2jFS4o20rCIttJtqXbRtosMixRipdtJtosBHtpMVLto20WAi20bal20m2iwEW2jFS7aTbRYCPFG2pNtG2iwEW2jbUm2jbSsBHik21LtpNtFgI9tJipdtG2iwEWKNtSbaNtFgIttGKlxSbaLAR7aNtSbaTbRYCPFJipdtG2iwEW2jFSbaNtKwEW2jbUu2k20WAixRipdtJtoAjxSbal20YosBFtpNtS4o20WAi20YqTbRtoAj20m2pMUbaLDuR7aTFS7aTbSAjxSYqXbSbaLAR7aTbUuKTbRYCPFJtqXbSYosBHik21Jto20WAjxSYqXFJtosBHtpNtS4pMUAR4pMVLtpNtFgI8UhFS4pNtICPFG2pNtJigCPFJipcUm2gCPFG2pMUmKAI8UYqTbSYoAXbS4p+KMU7AMxS7afijFFgGYpcU/bRtosAzbS7aftpdtAEe2l20/bS7aBEe2l20/bS7adgI9tLin7aXbQAzbRtqTbRtosAzbRtqTbRtosAzbRtqTbRiiwDNtG2pNtGKLAM20bakxRtosAzbRipMUbadgGbaNtSbaMUWAZto21JtoxRYBmKNtSbaNtFgI9tLtqTbRtosBHil21Jto207AR7aXbT9tLiiwEe2l20/bS7aLAR7aNtSbaNtFgGYo21JtpdtFgI9tG2pNtGKdgI9tLtqTbRtosK5HtpdtSbaNtFguR7aXbUm2jbRYLke2jbUm2jbRYLke2l21Jto20WC5HtpdtSbaNtOwXI9tG2pNtLtosFyPbRtqTbS7aLBci20u2pNtG2iwrke2jbUu2jbQFyPbRtqTbRtosFyPbS7ak20baLBcj20bal20baLBci20u2pNtLtosFyLbRtqXbRtp2C5Hto21Jto20WC5Hto21Lto20WFcj20bak20baLBcj20bal20baLBcj20bak20baLBcj20bal20baLBcj20bak20u2iwXIttG2pdtG2iwXIttG2pdtG2iwXI9tG2pdtG2iwXIttG2pdtG2nYLke2k21Lto20WC5Hto21LtpNtFguR7aNtS7aNtFhXIttG2pdtG2iwXIttG2pdtG2iwXI9tG2pNtG2iwXI9tG2pNtLtosFyLbRtqXbRtosFyLbRtqXbRtosFyLbRtqXbRtosFyLbRtqXbRtosFyLbRtqXbRtosFyLbRtqXbRtosFyLbRtqXbRtosFyLbRtqXbRtosFyLbRtqXbRtosFyLbRtqXbRtosFyLbRtqXbSbaLBci20bal20baLBci20bal20baLBci20bal20baLBch20u2pNtG2iwXIttG2pdtG2iwXIttG2pdtG2iwXIttG2pdtG2iwXIdtG2pdtG2iw7kW2jbUu2jbRYLkW2jbUu2k20rBci20bal20baLBci20bal20baLBci20m2pttJtosFyLbRtqXbRtosFyLbRtqXbSbaLBci20bal20baLBci20bal20m2iwXI9tJtqXbRtosFyLbRtqTbRtosFyLbRtqXbRtoHci20m2pdtG2iwXIttG2pdtG2kFyLbSbal20baAuRbaNtS7aTbQFyLbRtqXbRtoC5FtpNtS7aNtAXIttG2pNtG2iwXIttG2pcUm2iwXIttG2pdtG2iw7kW2k21Lto20rBci20bak20baLBci20balxSbaLBci20bal20baLBci20m2pdtGKLBci20m2pdtG2iwXIttG2pNtG2lYCLFGKk20baLARYo21LtpNtFhkW2jbUu2k20WAj20m2pdtJtosBHtpNtS7aTbSsBHtpMVLik20WAjxSbalxSbaLAR7aTFS7aTbRYCPFJipdtJtosBHtpMVLtpNtFgI9tJtqXbSEUrAR7aTFS4pNtFgI9tJtqXbSbaLAR7aTbUu2kxQBHtpMVLtpNtFgI8Um2pdtJtosBHikxUpWk20WAXFG2pNtLiiwEe2l20/bS4p2Aj20u2n4pdtFgI9tLtp+2lxRYCPbS7akxRtosAzbRtqTbRinYBm2jbUm2jbRYBm2jbUm2jFFgGbaMVJtpcUWAj20bakxRtosIZil20/FLtp2C5HtpdtPxS4osFyPbS7aeFpdtFguR7aXbT8Uu2iwEe2l20/bS4p2AjxS7aftpdtFgI9tLtp+2l20CuR7aNtSbaXbQBHtoxUm2l20Bcj20bak20u2gCPbRtqTbRtoC5HtpcVJtpdtOwXIttLtqTbRtosK5HtpdtSbaNtFguR7aNtS7aNtFguR7aNtSbaXbRYLke2jbUm2l20WC5Hto21Jto207CuR7aXbUm2jbRYLke2jbUu2jbRYLke2jbUm2l20WC5Hto21Jto20WC5Hto21Lto207BcjxRtqTbS7aLBcj20bak20baLBcj20bal20baLCuR7aNtS7aNtFguRbaXbUm2jbTsFyPbRtqXbRtosFyPbRtqTbS7aLBci20bal20baLBci20u2pNtLtosFyLbRtqXbRtosFyLbS7ak20u2iwXIttG2pdtG2nYLkW2l21JtpdtKwXIttG2pdtG2nYVyLbRtqXbS7aLBch20u2pdtG2iwXIttG2pdtG2iwXIttG2pdtG2iwXIttG2pdtG2iwXI9tG2pdtG2iwEW2jbUu2jbRYCLbRtqXbRtosBFto21Lto20WAi20bam20baLARbaTbU22jbRYCLbRtqXbRtosBFto21Lto20WAi20bal20baLARbaNtS7aNtFgIttG2pdtG2iwEW2jbUu2jbRYCLbRtqXbRtosBDto21NtpNtFgIttG2pdtG2iwEW2jbUu2jbRYCLbRtqXbRtosBFtpNtTbaTbRYCLbRtqXbRtosBFto21Lto20WAi20bal20baLBch20bal20baLBci20bal20baLBci20bal20baLAQ7aNtS7aNtFguRbaNtS7aNtFguRbaTbU22k20rBci20bal20baLBci20bal20baLDuQ7aNtS7aNtFguRbaNtS7aTbRYLkW2jbUu2jbRYLkW2k21NtpNtFguRbaNtS7aNtKwXIttJtqbbSbaLBci20bal20baLBci20m2pdtG2iwXIttG2pdtJtosO5Fto21LtoxRYLkW2k21Lto20WC5FtpNtS7aNtKwXIttG2pdtJtosFyLbRtqXbRtosFyLbSbal20baLBci20m2pdtG2iwXIttJtqbbSbaVh3IttG2pdtJtosFyLbRtqXbSbaLBcj20m2pdtJtosFyPbSbal20baLBci20m2pdtG2gLkW2k21NtpNtIdyLbRtqXbSbaAIttG2pdtJtoC5Fto21LtpNtAEWKNtS7aTbQFyLbRtqXFJtosFyLbRtqTbRtosFyLbSbal20baVguRbaTbUu2jFFguRbaTbUuKMUWGRbaTbUu2jbRYLkW2jbUm2jbRYCLFG2pNtG2lYLkW2k21LtoxRYCLbRtqTFJtosBHtpNtS7aNtFhkW2k21Lik20rALto21JtpdtVYRHtpdtP20u2iwXGbaNtSbaXbRYLke2jFSbaXbRYLke2jbUm2l207CuR4o21Lto20Bcj20u2pNtLtoC5FtpdtSbaNtAXI8Uu2pNtLtoC5FtpdtSbaXbTC5Hto21JtpdtFhXI9tG2pdtG2iwXI9tG2pdtLtosFyLbS7ak20u2iwXIttLtqTbS7adguRbaXbUm2l20WC5FtpdtSbaXbRYVyLbRtqXbS7aLBci20bal20u2nYLkW2jbUu2l20WC5Fto21LtpdtFguRbaNtTbaNtFhXIttG2pttG2nYLkW2jbU22jbRYLkW2jbUu2l20WC5Fto21LtpdtFguRbaNtS7aXbTsK5DtpdtS7aXbRYCHbS7al20baLBci20bam20baLARbaNlTbaNtFgItlGypttG2nYCHbS7Kl20u2iwEOyjZU22jbRYCLZRsqbbRtosFyLZRtqXbRtosFyLZS7Kl20baAItlG2pttG2iwEO2l2VLto20ARbKNtTbaMUCItlG2pdtGKYEW2jZU22jbQBFto2VLto20Bci20uypdtG2gLkWyjZUu2jbQFyLZS7Kl20baAuRbKNlS4o20Bci2UbKl20baAuRbKXZUu2jbRYLkWyjZUu2jbRYLkWyjZU22jbRYLkWyjZUu2jbRYLkWyjZUu2jbRYVyLZRsqbbRiiwXIdlGypttG2iwXIdlLsqXbRtosFyLZRsqXFGKLBci2UbKl20YosFyLZRsqXbRtosFyLZRsqbbSbaLBci2UbKm20baLBch2UbKlxS7aLBch2UbKm20baLBch2UbKl20baLBci2UbKl20baLBci2UbKlxRtosFyLZSbKmxRtosFyHZRsqbFG2iw7kOyjZU22jbRYLkOyjZU22k20WC5Dso2VNto20WC5Dso2VNto20WC5Dso2VNto20WC5Bso2VPtpNtFguQ7KNlTbaNtFguQ7KTZU+KNtAXINlGypttG2gLkOyjZU22jbQFyHZSbDU+2jFAXINlGypttG2gLkGyjZU+2jFAEGyjZU22jbSC5Bso2VNil20Bcg2UbKm20baAINlGyp8UbaAINlJsqfbRtoAg2Uban20m2gCDZRsqfbRtosBBspNhqfbRtosMg20ban20m2iwEG2jbU+2jbRYCDZSbKn20baLAQbaNtT7aTbSsBBto21Pto20WAr7aNtT7aNtFgK+2jbU+2jbRYCDbSbasbaTZRYCDbSban20baVguQbaTbU+yjZRYdyDbSban2UbKLBcg20m2p9lGyiwXINtG2p9lJsosFyDbRtqbZRspWC5Bto21Nso2UWHcg20bam2UbKLBcg20bam2UbKLBcg20m2p9lJspWC5DtpNtT7KTZRYLkO2jbUxSk2UWC5DtpNtTbKNlFguQ7aTbU2yjZSsFyHbSbam2Umyiw7kW2k21NspNlFgIttJtqbZSbaLARbaTbU22k20AQ7aNtTbaTbSAi20m2pdtG2gZDto21LtpNtAEW2jbUu2k20ARbaTbU22k20BcXbShaftpdtMVyPbS7ak20baLBcZto21JtpdtFguRhaNtSbaXbRYCPbS7aftpdtOwrkeKXFSbaNtFguR7aXbUm2l20WC5HtpdtP20u2nYLke2jbUu2jbRYLke2l21Jto20WFcj20u2pNtLtp2C5FtpdtSbaXbRYCMLRtqTbS7aLBcj20bak20u2iwrkeKXbUm2jbTsFyPbS7ak20baLAR7aXbUm2jbRYCPbS7ak20baLAR7aXbUm2jbTsBHtpdtSbaXbRYCLbS7ak20u2iwEW2l21JtpdtAiLbS7ak20baAI9tLtqTbRtoAj20u2pMUbaAI9tG2pdtG2mBHtoxUm2l20BcjxRtqTbS7aAuR7aNtSbaXbRYLke2jbUm2jbRYVyPbS7ak20baLBcj20bal20baLBcj20bak20u2nYLkW2l21Jto20WC5HtpdtSYo20WC5Hto21Lto20WC5FtpdtSYpdtFguRbaNtS7aNtFguR7aNtS7aNtFhXIttLtqTbRtosFyPbRtqXbRtp2C5FtpdtSbaXbRYLkW2jbUu2jbRYLkW2l21Lto20WAi20bal20baLAR7aNtS7aNtFguRbaNtS7aNtFgIttLtqTbS7aLARbaNtS7aNtFgIttG2pdtG2iwEW2jbUu2jbRYCLbS7al20baLCIttG2pdtG2gLkW2jbUu2jbRYCLbS7ak20baLBci20bal20u2mBFto21JtpcUWC5Fto21Lto20WAi20bal20baAIttG2pdtG2iwXIttG2pdtG2gLkW2jbUu2jbRYLkW2jbUu2jbRYLkW2jbUu2jbRYLkW2jbUu2jFFguRbaNtS7aNtAXIttG2pdtJtosFyLbRtqXbRtoAi20bal20YpBci20bal20baLBci20bal20baLBci20m2pdtG2iwEW2jbUu2jbRYCLbRtqXbRtosO5FtpNtS7aNtFguRbaNtS7aNtFguRbaNtS7aNtFgIdtG2pdtG2iwEW2jbUu2jbRYLkW2k21NtpMUWC5Fto21Lto20WAi20m2pdtG2iwXIttG2pdtG2iwXIttJtqXbRtpWC5Fto21LtpNtFguR7aTbUu2jbRYLkW2k21NtpNtFguRbaNtS7aTbRYdyLbRtqXbRtosFyLbRtqXbSbaLARbaNtS7aNtFguRbaTbUu2jbSsFyLbRtqTbRtosFyLFGKl20m2iwXIttG2pdtJtosFyPbSbal20baLDuRYpMVLto20BcixRtqTbRtoC5FijFSbaNtAXIttG2pcUm2kBHikxUu2k20AR4pMVLto20DIttJtqXbSbaLAR4pMVLtpNtFgI8UmKlxSbaLAR7aTFS7aTFFgI8Um2pdtJtpWAixRipdtJtosBHtpNtS7aTbRYCLbRtqTbRtosFyLbRtqTbRtpWC5Fto21Jto20WC5Fto21Jto20WHci20m2pcUm2iwXI9tJtqXbSbaVguR7aTbUu2k20WC5HtpNtS4pMUWHci20balxSYpWC5FtpNtS4oxRYLkRWk21LikxRYLhtoxUmKNtOwrjNtG2pMUuKdguR4pdtPxS7aLBcZto21JijFFguM20u2n7aXbTsK5HtpdtSYoxRYBm2jbUm2jbRYBm2l20/FLtosBHtpdtP20u2nYCPbS7aftpdtFgI8Uu2n7aXFADAtG2pNtGKBDNtG2pMUYoAZtpdtPxS7aYXI8Uu2n7aMUBcZtpcU/bS7aLBcj20uKfilxRYLkeKXbT9tLtosFyPbS4p+2l20WFcj20u2n7aXbTsFyPFLtp+2l20WC5HtpdtP20u2iwXI9tLtp+2l20WFcj20uKftpdtFguR7aNtS7aNtOwXI8UYqTbS7aLBcj20YqTbS7aLBcj20bak20uKLARbaXFSbaNtFguR4pdtSbaNtAiPbRtqXbRtoC5HtoxUu2jbTC5HijbUm2l20Bcj20bak20baLAR7aNtS7aNtFgI8Ubak20u2iwEe2jbUm2l20WAi20u2pNtG2iwEe2jFS7aNtAEW2l21Jto20CI8Ubal20baYEeKNtSbaNtAEe2jbUu2jbQBFtpdtSbaXbQFyLFG2pdtG2gLke2jFSbaXbQBFijbUu2jbQBHijbUm2jbQBHtoxUuKNtFgIttG2pdtG2iwEe2jbUm2jbQBHto21Lto20ARbaNtS7aNtAEW2jbUu2jbQBHto21Jto20AR7aNtS7aNtAEW2jbUu2jbQBFto21Lto20ARbaNtS7aNtAEW2jbUu2jbQBFto21Lto20ARbaNtS7aNtAEW2jbUu2jbQBFijbUu2jbQBFijbUu2jbQBFijbUu2k20AR7aNtSbaMUARbaXbUm2jbQBFto21Lto20ARbaMVLto20WAixRtqXbRtoAi20bak20baAIttG2pdtG2gCLbRtqXbRtoAi20bal20m2gCPbSbal20baAIsUbal20baLARbaMVJto20WAi20bal20baAIttG2pdtJtosFyPbSbal20baAIttG2pNtG2gCPbSbal20baAuRbaTbUu2jbQBFto21LtpMUrBcj20m2pdtG2gLkWKNtS7aTbRYCLFG2pdtG2iw7kWKNtSYo20WAi20bal20m2iwEW2jbUu2jbRYLkW2k21Lto20WC5FijFSbaNtFguRbaNtSbaNtFguRbaNtS7aTbSsFyLFGKl20m2iwyPbSbal20baLBcixSYqXbRtosFyLbRtqTbRtosFyLbRtqTbRilYLkWKNtSbaNtFguRbaNtSbaNtFguRbaMVJto20WHci20bal20mKLBcj20m2pdtJtosFyLFG2pdtJtpWC5FtoxUm2jbRYLkW2jbUm2jFFguRbaNtSbaNtFh3IttG2pNtJiiwXI9tJtqXbRtoC5FtpNtS4pNtAXI9tJtqXbSYpAR7aTbUu2kxQBHtpNtS7aTbRYCLbRtqQrRiiwyLbSbalxRtosBFtpNtS4pMUrAR7aQrUu2kxRYCLbSbalxRiiwCbaMVJtpdtOwEe2lC0/bS4oAj20u2pMUbaAGbaNtSbaXbQIj20u2pNtGKYDNtG2pNtLtoAj20bak20u2gLke2l20/bS7aLBcZto21JtpdtFhXI9tGKk20uKdguR7aNtSbaXFFguR7aXbT8UuKLARhaXbUm2jbRYLke2l21Jto207CI9tLtqTFGKAuM20bak20oWiwXI9tG2pMUYosFxm2jbUm2l20WAj20bak20u2mIj20bak20u2gLke2l20/bS7aAuR7aXbT8UuKAI9tLtp+KXbQBHtpdtSYo20AR7aXbT9tLtpiI9tG2pNtLigCPbRtqTbS7aAI9tG2pMUu2gCPbRtqTbS7aAI9tG2pMUYoAZtoxUmKMUAR7aXbT9tLtoAj20bak20uKAI9tG2pMUbaAI9tLtqTbRtoAj20u2n7aXFAEe2jbUmKXbQIj20bak20baAI9tLtqTFGKYEe2jbUm2jbQAzbRtqTbRigCPbRtqTFG2gBm2jbUmKNtAEe2jbUm2lxQBHijbUmKNtAEe2jbUm2lxQBFtpdtSYoxQBHijbUm2jbQBHtpdtP20uKAI9tGKkxRigCPbRtqTFG2gCPbRtqTbRtoAj20uKk20baAI9tG2pNtG2gCPbRtqTbRtoER7aNtSbaNtAyPbRtqTbS7aBEWKXbUm2jbQMjxRipNtG2gRHtoxUm2jbQMj20bak20baAI9tG2pNtG2gCPbSbal20baAIttG2pdtG2gCLbRtqTbS7aAIttG2pNtG2mBHto21Jto20AR7aNtSbaNtICPFG2pNtG2mIj20bak20baQyLbRtqXbRtoAi20bal20m2gCPbRtqTFG2gCPbRtqTbRtoAi20bal20m2gCPbRtqTbRtoAixRipdtG2gCLbRtqTbRtoAj20bak20baAIttG2pdtJtoAjxRtqTbRtoAi20bal20baAIttG2pNtG2gCLbRtqXbSbaAI9tJtqXbRtoAi20m2pdtG2gCLbRtqXbRtoAi20m2pdtG2kBFto21Jto20ARbaNtS7aNtAEW2k21Lto20ARbaNtS7aTbQMi20bal20m2gRFto21LtpNtAyLbRtqXbRtoAi20m2pdtG2gCHbRtqXbRtoAi20m2pdtG2gCLbSbam20m2gCLbRtqXbSbaQEW2k21NtpNtAEW2jbUu2k20DIttJtqbbSbaAIttJtqbbSbaAIttG2pdtJtoC5FtpNtTbaTbSsFyLbSbal20baAuRbaTbUu2jbRYCLFJtqXbSbaLDIsUbal20m2gLkWKNtS7aTFFguRbaNtS7aTbSsFyLbSbal20baLBcixSYqXbRtosFyLFJtqXbSbaLDuR7aTbUu2k20rBci20bal20m2iwXIsUbal20mKLBci20m2pdtJtoHcj20mKl20m2gLibaXbT8UYoC4zbS7afijFFhDQKNtPxS4p2C4zFLtp+KMUWC43bRtp+KXFFguMxS4p2KXFArjMUu2n4oxTAbijbT8UuKLBcZijFPxS4osAzFLinYpcUCGYpcU/FGKdguM20uKfijFFguMxS4p+KMUWC43FGKfijFADdtGKfilxQK4zFGKfilxTAZtpcU7FLigBmKXFOxS4oAZilxTsUuKLAM20uKfijFADMUuKdilxQAzFLinYpcUAMxS4p2KXFAhmKXFOxS4pgM20uKdilxQFxmKXbTsUuKAGYpcU7FLigBmKMU/FLigBm2jFPxRigBuKMU/FGKAG7aMU7FLigBmKXFOxS4oAZtoxT8UYoAbijFPxRigBuKMU/FGKAGYpcU7FLigQzFGKftoxQA3FGKfijFADMUYp+KXbTAZijFPxRtoAZijFSbaNtADMUYp+KXbQBHilxT9tG2gBmKMVJto20AMxRtp+KXbQBHto21Jto20AR7aXbUm2jbQBHto21Jto20AM20bak20YoAj20bak20baQyPbS7afilxTAj20bakxRtpAR7aNtSbaNtAEe2jbUm2l20ARbaXbUm2jbQBHto21Jto20AR7aNtSbaNtAEe2jbUm2jbQBHto21Lto20ARbaNtS7aNtAEW2jbUu2jbQBHtpMVLto280ARbaXbUm2jbQBHtpNtS7aNtAEW2jbUu2jbQBFto21LtpNtAEe2jbUm2jbQBHto21Jto20AR7aNtSbaNtAEeKTFS7aTbQBHto21LtpNtAEeKMVJto20AR7aTbUu2jbQBFto21Jto20AR7aNtSbaNtAEW2jbUu2k20wI9tG2pNtG2gCPbSbal20baBEW2jFSbaNtAEeKMVJtpNtAEeKMVJto20AR7aTFSbaNtAEe2jbUm2jbQBHikxUmKMUAR4oxT8UbaAGYpMVJto20gI8UYp+KMUAR7aMU/FGKAGbaMU/FGKAI9tGKfijFAEe2jbUmKTFADNtJtqTFGKAI9tG2n4oxQBHtoxUmKTFAyPbRtqTFJigCPbRipMUmKAGbaTFSYoxQBHtpMVJijFAEeKTbUmKMUgI9tJtqXFJigCPbRipMUmKAI8UbakxSYoAj20bakxSYoAj20bakxRigZFto21JikxQBHtpNtS4pMUAR7aTbUuKTFAEe2k21LikxQBHtpCtSYo20gIttG2pNtG2gCLbRipNtG2gCLbRipNtJigLkeKTbUuKTFAyPbSbalxSYoAj20m2pcUmKQEW2jbUmKMUARbaTbUuKMUBcixSbalxSbaAIttGKlxSbaVhkW2k21LijbRYBmKMU/bS7aYDMUuKdtpdtADMUuKdil20CG4oxT8UuKYDMUuKdil20AMxS4p+KNtADcUYp+KXFADMUYqTFG2mIZilxT9tG2gBmKXFPxS4oAZijbT8UuKAGYoxT8UuKAGYoxUmKNtADMUuKftpcUxEeKXFPxS7aAI8UuKfilxQBHil20/FLigBmKNtP20uKAGbaNtPxS4oAZto21JijFADNtG2pMUbaAGbaNtSYo20AM20bakxRigQzbS7afijbQAzbRtqTbRimAzbRtp+2lxQAzFG2pMUYoAZijFP20u2gBmKNtP20u2gCPbS4p+2l20gI8Uu2n7aXbQBHijFSbaXbQBHijbUm2l20DI8Ubak20baAGbaNtSbaXbQBFtpcVJtpdtFwIttLtqTbS7aLgRbaXbUm2jbRcCPbRtqXbRtouBHto21JtpdtFwsRbaXFSbaNtAEeKXbUm2jbQBHto21Lto20ARbaXbUm2l20rgRbaNtS7aNtFwI9tG2pNtLtoGRbaXbUm2jbQBHto21Lto20XAi20u2pNtG2i4Ee2jFSbaXbRcCLbRtqXbRtouBHto21JtpdtFwIttG2pdtG2i4EW2jbUu2jbRcCPbRtqTbRtouFiPbRtqTbRtouFiPbRtqXbRtouBFto21Lto20XAi20u2pNtG2i4WI9tG2pNtG2i4WI9tJt5qXbRtouBHtpNtS7aNtFwsR7aTbU22k20XCxFto21Lto20XCxFto21Lto20XCxFto21Lto20XAi20bal20baLhYi20bal20baLgRbaTbU22k20XAi20bal20baLgRbaNtS7aNtFwIttG2pdtG2i4EW2jbUu2k20XCxFto21Lto20XAi20bal20baLgRbaTbUu2jbRcCLbRtqXbRtouBDto21Lto20XAi20bal20baLgQ7aNtS7aNtFxWIttJtqbbRtouBDto21Lto2UARbaTbU22k20BYi20m2pttJtpgRbaNtS7aNtAEW2k21NtpNtAEW2k21NtpNtFwIttG2pdtJtouBFto21LtpNtFwIttG2pdtG2i4EOKMVLto20XERbaTbUu2jbQBFik21Lto20ARbaTbUu2jbQBFijFSbaNtAEWKNtSbaNtAEeKTbUmKTFMCPbRtqTFGKAI9tJipMUYpAR7aNtPxRigCPFJtqXFJigCPFGKkxSYoAjxRipNtGKAIttJtqXFJigZHtpMVLikxQBHtpMVLikxQBHik21LikxQBFijFSYoxQBFijFSYoxQBHikxUm2k20AR4oxUmKMUgIsUYqTFJtoAjxRipNtJigCPFJipdtJigCPFJipNtG2gZHikxUmKTFAEeKMVJik20AR4oxT8UbaQEeKTFSYpMUAR4oxUmKTFAxmKXFPxS4pAM20YqTFGKYDMUuKfijFADcUbafilxQIZilxT8UuKAI8UuKfilxQAzbS4p2KXFADMUuKfijFMBu2jbT8UuKAGYo20/FLigQzbS7afijFADNtLtp+KMUAM20u2n4pcUAM20bafilxQAzbS7adilxQAzbS7adilxQAzbS7adilxQA3bRin4oxQA3FGKfijFADcUYp+KMUwG7aNtPxRigQ3FGKfijFADcUYp+KMUANxRin7aXFADMUYp+2l20AM20Yp+KXbSGM20Yp+KXFADMUbaftpcUAMxS4p+KMUAMxS7afto20AMxS4p22l20AM20uKfto20AM20bak20baBjNtGKkxRtoAZtoxUm2jbSAZtoxUm2jbRcBmKMU/bS7aLgR4pcU/bS7aLgR7aXFP20baLgMxRtqTbRtoAZijFSbaNtAyPFLin7aXbRcCPbRipNtG2i4DMUYp+2l20rhYjxRtqTbRtouFhm2jbUm2jbRcLEeKXFP20u2i4WI8UYqTbRtouFhm2jbUm00baLgR4oxUm2jbRcLEeKMVJtpdtFwI8UYqTbRtouFiPFGKk20baLgR4oxUm2l20XHYjxRipNtG2i4WI8UYqTbRtouFiPFGKk20bKLhYjxRtqTbRtouFiPbS4qTbRtouFiPFGKk20baVwsR4pMVLto207hYjxSYqXbRtouFiPFGKk20baLhYjxRipNtG2i4WI8UmKl20baLhYixRipNtG2i4WI8Ubal20m2i4WI8UYqTbRtouFiPFGKk20baLhYjxRipNtG2i4WI9tJtqXbRtouBFijFSbaNtFxEeKMVJto20XAjxSYqXbRtouBFijbUm2jbRcCPFG2pNtG2i4EW2jbUm2jbRcCPFJtqXbRtouFiLbRtqTbRtouBHtoxUm2k20XAjxRipNtG2i4EW2jFS7aTbRcCPFG2pNtG2i4EWKMVJto20wI8UmKl20mKBEeKMVJto20ARYo21Jto20XAixRipNtG2gCPFJipdtJtouBHijFSbaTbQBHijFSbaTbQBHtoxUm2kxQIjxRipMUmKYEeKMVJijFAEW2jbUmKTFAEe2k21LikxQBHtpNtSlaTbQBHto21JtpMUAR7aTbUuKTFAEe2jbUmKTbQIj20bakxSYoAj20bakxSYoAj20bakxSYoAj20bafijFMCPbRtp+KMUgI9tJtqTFGKAI9tJtqTFGKAI9tJtqTFGKAIttG2pMUYoAi20bakxSYoAj20bakxSYoGR7aTbUuKTFAEe2kxUuKTFAEW2jbUmKMUARbaMVJikxQBHikxUuKTFAEe2kxUhFGKAIttGKkxRikBFikxUu2kxQBFijFS7aTbQMjxS4p+2l20hjMUYqTbS7aAI8UuKk20baLgR4pcVJtpdtFxEeKXFSBaNtFwI8UuKk20u2i4WI9tGKl20u2i4WIttLipdtG2i4WIttLtqXbS7aLhYi20u2pNtLtouFiLbS7al20baLhYi20u2pdtG2i4WI9tG2pdtLtp3CxFtpdtS7aNtK4WIttLtqXbS7aLhYi20bal20u2i4WIttG2pdtKFouFiLbS7al20baLhYi20u2pdtKFouFiHbS7Km2UbKLhYi20bKm20u2i4WIdlLsqXbS7KOYLEOyl2VNto2Ucw7EWyjZU22l2UrhYh2UbKm20u2i4WIdlLsqXbS7KLhYh2UuyptlG2i4WIdlLsqbbRsouOxFso2VNtpdlFwsQ7aNtTbaXbSuFiHbRsqbbS7aLhYh20bam2Uu2i4WIdlG2pttLtouFiHZRtqbbS7aLhYh20bKm20u2i47EOyjZU22l20XCxDto2VNto20XCxFto2VNto20rhYh20u2pttG2i4WIdlLsqbbRtouFiHbS7al20u2i4WIdlG2pttG2i47EO2l21LtpdtFwsQ7aXbUu2l20XCxBspdtTbaNtFwsQ7KNtT7aNtFwsQ7KNtTbaNtK4WItlG2pttG2i4WIdtGypttLtouFiHbRsqbbRtouFiHbRtqbbRtouFiHbRtqbbS7aLhYg2Uban20baLhYh20bam20baLhYh2UbKm20baLhYh20bKn20baLgQbaXZU22jbRcLEOyjbU22jbRcLEOyjbU22jbRcLEOyjZU22l20XCxBto21Pto20XCxBso2VPto20XCxBto21Pto20XCxBto2VPto20XCxBso21Pto20XCxBso21PtpNtFwsQ7aNlTbaNtFwsQbaXbU22jbRcLEG2jZU+2jbRcLEG2jbU+2jbRcLEG2jbU+2k20XCxBto21Pto20XCxBto21Pto20XCxBto21Nso20XCxBso21Pto20XCxBto21PtpNtFwsQ7aTZU+2jbRcLEG2jbU+2k2UXCxDspNtT7aNtFwsQbaNlT7aTZTuFiDZRtqfbRtouFiDbRsqfbSbaLhYg2UbKn2UbaLisQbKTZU+2jZRcLEGyk2VY20m2i4WINlJsqxto2UXCxX2UbKn20bKLhYr7KNlT7aNtO4WK+yjbU+2jZRcLFfZRsqxspNlFwsV9lGyrGyk2UXFYr7KNlWNlJsouFivso21Y2Um2i4WK+2jbU+yjZRcLFfZSbasbKNlO4WK+2k21Y2UbKLisV9tJsqxspNlFwsQbaTbVjZSbKLhYr7aNtWNlJsouFiDbSban2UbKLhYr7aNtT7KTZTuFiDbRtqfZSbKOYViDbSbasbKTZRcLEG2k21PspNlFwsQbaNtT7KTZRcLEG2k21PspNlO4rEO2k21PspNlFwsQbaNtTFKTZRcLEO2jbU2yk2UXCxDijFS7KNtFwsQ7aTbU22k20XCxFikxU22k20XCxFikxUxWk20XCxDijFSlaNtFwIcUYqXbSbaLjIiKTFS7aNtFwIsUmKlK0m2i4iLFGKk20baBkWKTFS7aTbQBHikxUm2jbQA3bS7al20u2s7l2IttLtqXbRtouFiPbS7ak20u2i4rEe2jbUu2jbRcdiPbS7ak20u2i4rEe2lC1JtpdtFwsRbaXbUm2l20XCxHtpdtSbaXbRcLEW2l21JtpdtFwsR7aNtS7aNtFwsR7aXbUm2l20XCxFtpdtSbaXbRcLEe2jbUu2jbRcLEe2l21JtpdtFwsRbaXbUgWl20XHYj20u2pNtLtouKxFtpdtS7aNtFx2I9tLtqTbS7aVwsRbaXbUgWl20XCxFtpdtS7aXbRcLEW2l21JtpdtFx2IttLtqTbS7aLhYj20bal20baLhYj20u2pNtG2i4WI9tLtqTbS7aVwsRbaXbUm2l20XCxHto21JtpdtFwI9tG2pNtLtouBHto21JtpdtFwI9tG2pdtG2i4Ee2jbUm2lxSuMj20bak20u2i4Ee2jbUm2l20XAj20bak20u2i4EW2l21JtpdtFwIttLtqTbRtouBHtpdtSYo20rgR7aXbUm2jFFwsR7aNtSYpdtFwsR7aNtSYpdtFwsRbaXbUmKNtFwsR7aNtSYpcUXHYj20bak20baLisR7aXbUm2jbRcdiPbRtqTFLii4WI9tG2pNtG2lcLEe2l20/FLii4WI9tG2pNtGKLhYj20bakxS4ouFiPbRtqTFGKLhYj20bakxRii4WI9tLtqTFG2i4WI9tG2pMUYouFiPbRtqTbRtouFiPbS7aftpcUXCxFtpdtPxS7aLhYj20bak20baLhYj20bakxRii4WI9tG2pMUYouFiPbRtqTFGKLhYjxRipMUYouFiPbRtqTFGKLjsMxSbakxRii4rDNtJtqTFGKLhYj20bakxRii47Ee2jbUmKMUXFYj20bakxRii47Ee2jbUmKMUXFYj20bak20YouOxHto21JikxRcViPbRtqTFGKLhYj20bakxRii4WI9tG2pMUYouFiLbRtqXFJii4WI8UbakxRii4WI9tG2pNtGKLhYixRtqTFGKLhYj20bakxRii4WIttG2pcUmKLhYj20bak20YouFiLbRtqXbRtp3CxFto21JijFK4WIttG2pMUbadwsR7aTbUu2jFFxWIttG2pNtG2i4WIttG2pdtJii4WIttG2pcUbaLhYi20m2pdtG2i4EW2jbUm2jbRcCLbRtqXFJtp3Ai20bal20YouBDto21LtpNtFwIttG2pdtGKLgQ7aNtS7aNtFwIdtG2pdtJtouIi20m2pttJtp3Ai20bal20baLhYh20bal20m2i4WIttG2pdtG2i4WIdtJtqbbSbaLhYi20m2pttJtouFiHbRtqbbSbadwsQ7aNtTbaTbRcLEO2k21Nto20XFYh20m2pttJtouFiHbSban20m2i4WIdtJtqbbSbaLhYh20myp9tJtp3FYh20m2pttG2i4WINtJtqfbSbaLhYh20m2p9tN20XCxDto21NtpNtFwsQ7aCtS7aNtFwsQ7aTbU22k20XCxFtpNlTbaTbRcLEOyk21Nto20XFYg20myp9tJtp3HYh2Umyp9tJtouFiDZRtqbbSbaLhYh2Umyp9tJtouFiPbS7afilxUXKGbaXbT8UuKVwGbaNtSYoxRcBmKXbT8UuKLgM20u2n4oAouAzbS7afilxRcBm2l20/FGKLgN20bafilxRcBm2jbT8UoFFwGbaXbT8UAUXAbto20/FLii4DMUuKdilxRcBm2l20/FGKLgMAp22n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" alt="Atmospheric Transmission Spectrum" style="width: 100%; border-radius: 6px; object-fit: contain; max-height: 280px; background: #000;" onerror="this.style.display='none'">
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 2: OCO-2 SPECTROMETER DATA -->
+      <div class="atlas-content" id="atlas-content-oco2" style="display: none;">
+        <div class="atlas-card">
+          <div class="atlas-header">
+            <div>
+              <h3 class="atlas-title">🔬 NASA OCO-2 Grating Spectrometer Output</h3>
+              <p class="atlas-subtitle">High-Resolution Spectral Triplet (O₂ A-Band, Weak CO₂, Strong CO₂) & Global XCO₂ Map</p>
+            </div>
+            <span class="badge badge-emerald">A-Train • Carbon Cycle</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+            OCO-2 carries three high-resolution grating spectrometers that record hundreds of finely spaced spectral absorption lines 
+            of reflected sunlight. Below is the iconic <strong>Three-Band Spectrogram</strong> that appears on national exams:
+          </p>
+
+          <div class="atlas-svg-wrap">
+            <svg viewBox="0 0 900 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="900" height="280" fill="#090f19" rx="8"/>
+              
+              <!-- Panel 1: O2 A-band -->
+              <rect x="20" y="20" width="270" height="200" fill="#0f172a" stroke="#1e2c44" rx="6"/>
+              <text x="155" y="45" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Band 1: O₂ A-Band (0.76 µm)</text>
+              <text x="155" y="62" fill="#94a3b8" font-size="10" text-anchor="middle">Dry Air Column & Surface Pressure</text>
+              <!-- Spectral absorption lines (O2 A-band doublets) -->
+              <path d="M 35 150 L 50 150 L 60 80 L 65 160 L 75 70 L 80 170 L 90 90 L 95 180 L 110 75 L 120 190 L 135 70 L 145 195 L 160 80 L 175 190 L 195 90 L 210 185 L 230 110 L 250 175 L 270 175" stroke="#38bdf8" stroke-width="2"/>
+              <text x="155" y="210" fill="#94a3b8" font-size="9.5" text-anchor="middle">0.758 µm ──────── 0.772 µm</text>
+
+              <!-- Panel 2: Weak CO2 band -->
+              <rect x="315" y="20" width="270" height="200" fill="#0f172a" stroke="#1e2c44" rx="6"/>
+              <text x="450" y="45" fill="#34d399" font-size="12" font-weight="700" text-anchor="middle">Band 2: Weak CO₂ (1.61 µm)</text>
+              <text x="450" y="62" fill="#94a3b8" font-size="10" text-anchor="middle">Primary Column CO₂ Abundance</text>
+              <!-- Fine rotational lines -->
+              <path d="M 330 140 L 345 140 L 355 90 L 365 150 L 380 85 L 395 160 L 410 80 L 425 170 L 440 75 L 455 180 L 470 80 L 485 170 L 500 85 L 515 160 L 530 90 L 545 150 L 565 140" stroke="#34d399" stroke-width="2"/>
+              <text x="450" y="210" fill="#94a3b8" font-size="9.5" text-anchor="middle">1.594 µm ──────── 1.619 µm</text>
+
+              <!-- Panel 3: Strong CO2 band -->
+              <rect x="610" y="20" width="270" height="200" fill="#0f172a" stroke="#1e2c44" rx="6"/>
+              <text x="745" y="45" fill="#f43f5e" font-size="12" font-weight="700" text-anchor="middle">Band 3: Strong CO₂ (2.06 µm)</text>
+              <text x="745" y="62" fill="#94a3b8" font-size="10" text-anchor="middle">Aerosol Scattering & H₂O Check</text>
+              <!-- Saturated strong absorption lines -->
+              <path d="M 625 130 L 640 130 L 650 75 L 660 170 L 675 70 L 690 185 L 705 65 L 720 190 L 735 60 L 750 195 L 765 65 L 780 190 L 795 70 L 810 180 L 825 80 L 840 160 L 860 140" stroke="#f43f5e" stroke-width="2"/>
+              <text x="745" y="210" fill="#94a3b8" font-size="9.5" text-anchor="middle">2.042 µm ──────── 2.082 µm</text>
+
+              <text x="450" y="255" fill="#e2e8f0" font-size="12" font-weight="700" text-anchor="middle">Wavelength & Resolved Molecular Absorption Lines</text>
+            </svg>
+          </div>
+
+          <div class="recognition-cue-box">
+            <div class="cue-title">🎯 How to Recognize OCO-2 on a Test:</div>
+            <ul class="cue-list">
+              <li><strong>The Three Panels:</strong> If you see a diagram with 3 side-by-side spectral windows centered at <strong>0.76 µm, 1.61 µm, and 2.06 µm</strong>, it is ALWAYS <strong>NASA's OCO-2</strong>!</li>
+              <li><strong>The Formula:</strong> $XCO_2 = 	ext{Total } CO_2 	ext{ column} / 	ext{Total dry air column}$. The 0.76 µm O₂ band determines the denominator!</li>
+              <li><strong>Map Recognition:</strong> OCO-2 global maps are plotted in units of <strong>parts per million (ppm)</strong> with values ranging from ~405 to ~428 ppm. Look for the massive summer drawdown over the northern boreal forests (Siberia and Canada).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 3: CALIPSO CALIOP LIDAR CURTAINS -->
+      <div class="atlas-content" id="atlas-content-caliop" style="display: none;">
+        <div class="atlas-card">
+          <div class="atlas-header">
+            <div>
+              <h3 class="atlas-title">🛰️ NASA/CNES CALIPSO CALIOP Vertical Lidar Curtain</h3>
+              <p class="atlas-subtitle">532 nm Attenuated Backscatter & Depolarization Profile (Altitude: 0 to 30 km)</p>
+            </div>
+            <span class="badge badge-purple">ACTIVE Laser Lidar</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+            CALIOP shoots pulsed 532 nm and 1064 nm laser beams downward from 705 km, capturing narrow 2D vertical cross-sections 
+            ("curtains") of the atmosphere. Below is the standard CALIOP curtain format tested in Science Olympiad:
+          </p>
+
+          <div class="atlas-svg-wrap">
+            <svg viewBox="0 0 900 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="900" height="320" fill="#030712"/>
+
+              <!-- Grid & Altitude Y-Axis (0 to 30 km) -->
+              <line x1="70" y1="40" x2="850" y2="40" stroke="#1f2937" stroke-dasharray="2 2"/>
+              <line x1="70" y1="100" x2="850" y2="100" stroke="#1f2937" stroke-dasharray="2 2"/>
+              <line x1="70" y1="160" x2="850" y2="160" stroke="#1f2937" stroke-dasharray="2 2"/>
+              <line x1="70" y1="220" x2="850" y2="220" stroke="#1f2937" stroke-dasharray="2 2"/>
+              <line x1="70" y1="260" x2="850" y2="260" stroke="#4b5563" stroke-width="2"/>
+              <line x1="70" y1="40" x2="70" y2="260" stroke="#4b5563" stroke-width="2"/>
+
+              <!-- Y Labels (km) -->
+              <text x="60" y="45" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">30 km</text>
+              <text x="60" y="105" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">20 km</text>
+              <text x="60" y="165" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">12 km</text>
+              <text x="60" y="225" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">5 km</text>
+              <text x="60" y="265" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">0 km</text>
+              <text x="25" y="150" fill="#38bdf8" font-size="12" font-weight="700" transform="rotate(-90 25 150)" text-anchor="middle">Altitude (km)</text>
+
+              <!-- Atmospheric features inside curtain -->
+              <!-- Clean air background (dark blue/purple) -->
+              <rect x="71" y="40" width="779" height="219" fill="#0c192c" opacity="0.6"/>
+
+              <!-- Polar Stratospheric Clouds (PSCs) over Antarctica (-60° to -80° latitude at 18-24 km) -->
+              <ellipse cx="160" cy="115" rx="65" ry="18" fill="rgba(244, 63, 94, 0.45)" stroke="#f43f5e" stroke-dasharray="3 3"/>
+              <text x="160" y="118" fill="#fecdd3" font-size="10" font-weight="700" text-anchor="middle">Polar Stratospheric Cloud (PSC)</text>
+              <text x="160" y="130" fill="#fda4af" font-size="8.5" text-anchor="middle">Type I/II (18-24 km) - High Depol</text>
+
+              <!-- Tropical Deep Cirrus Anvil (12 - 16 km) -->
+              <path d="M 380 150 Q 430 130 520 145 Q 490 170 410 165 Z" fill="rgba(255, 255, 255, 0.85)" stroke="#38bdf8"/>
+              <text x="450" y="155" fill="#0f172a" font-size="10" font-weight="800" text-anchor="middle">Cirrus Cloud (Ice)</text>
+
+              <!-- Saharan Dust Plume (2 - 6 km) -->
+              <rect x="560" y="210" width="180" height="35" rx="6" fill="rgba(245, 158, 11, 0.55)" stroke="#fbbf24"/>
+              <text x="650" y="232" fill="#fff" font-size="10.5" font-weight="700" text-anchor="middle">Saharan Dust Layer (2 - 6 km)</text>
+
+              <!-- Marine Boundary Layer (0 - 2 km) -->
+              <rect x="71" y="245" width="779" height="15" fill="rgba(56, 189, 248, 0.5)"/>
+              <text x="470" y="256" fill="#fff" font-size="9.5" font-weight="600" text-anchor="middle">Marine Boundary Layer / Sea Salt Aerosols (0 - 2 km)</text>
+
+              <!-- X-Axis Labels (Ground Track Latitude) -->
+              <text x="160" y="285" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">75°S (Antarctica)</text>
+              <text x="320" y="285" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">30°S</text>
+              <text x="460" y="285" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">0° (Equator)</text>
+              <text x="650" y="285" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">25°N (Sahara)</text>
+              <text x="800" y="285" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">60°N</text>
+              <text x="460" y="308" fill="#e2e8f0" font-size="11.5" font-weight="700" text-anchor="middle">Sub-Satellite Ground Track Latitude</text>
+            </svg>
+          </div>
+
+          <div class="recognition-cue-box">
+            <div class="cue-title">🎯 How to Recognize CALIPSO CALIOP on a Test:</div>
+            <ul class="cue-list">
+              <li><strong>The Vertical Curtain:</strong> Height on the vertical axis (0 to 30 km) and orbital latitude/longitude along the horizontal axis.</li>
+              <li><strong>Color Coding:</strong> Blue = clear clean atmosphere, Green/Yellow = aerosol plumes (dust, smoke), White/Red = thick clouds or high attenuated backscatter.</li>
+              <li><strong>Depolarization Ratio:</strong> If asked whether a cloud is liquid or ice: <strong>Low depolarization (<5%) = Spherical liquid water droplets</strong> (preserves laser polarization). <strong>High depolarization (>30%) = Non-spherical ice crystals</strong> (scatters into orthogonal polarization).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 4: CLOUDSAT CPR RADAR PROFILES -->
+      <div class="atlas-content" id="atlas-content-cloudsat" style="display: none;">
+        <div class="atlas-card">
+          <div class="atlas-header">
+            <div>
+              <h3 class="atlas-title">📡 NASA CloudSat CPR 94 GHz Millimeter Radar Profile</h3>
+              <p class="atlas-subtitle">Radar Reflectivity Factor (dBZ) Vertical Cross-Section Through a Convective Storm</p>
+            </div>
+            <span class="badge badge-rose">ACTIVE Millimeter Radar</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+            CloudSat flies 15 seconds ahead of CALIPSO. Its 94 GHz (W-band) radar penetrates deep inside clouds where optical lidar 
+            is completely attenuated, revealing the internal liquid water content and precipitation core:
+          </p>
+
+          <div class="atlas-svg-wrap">
+            <svg viewBox="0 0 900 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="900" height="320" fill="#050a14"/>
+
+              <!-- Grid & Y-Axis (0 to 18 km) -->
+              <line x1="70" y1="40" x2="850" y2="40" stroke="#1f2937" stroke-dasharray="2 2"/>
+              <line x1="70" y1="100" x2="850" y2="100" stroke="#1f2937" stroke-dasharray="2 2"/>
+              <line x1="70" y1="160" x2="850" y2="160" stroke="#1f2937" stroke-dasharray="2 2"/>
+              <line x1="70" y1="210" x2="850" y2="210" stroke="#1f2937" stroke-dasharray="2 2"/>
+              <line x1="70" y1="260" x2="850" y2="260" stroke="#4b5563" stroke-width="2"/>
+              <line x1="70" y1="40" x2="70" y2="260" stroke="#4b5563" stroke-width="2"/>
+
+              <text x="60" y="45" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">16 km</text>
+              <text x="60" y="105" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">12 km</text>
+              <text x="60" y="165" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">8 km</text>
+              <text x="60" y="215" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">4 km (0°C)</text>
+              <text x="60" y="265" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">0 km</text>
+              <text x="25" y="150" fill="#f43f5e" font-size="12" font-weight="700" transform="rotate(-90 25 150)" text-anchor="middle">Altitude (km)</text>
+
+              <!-- Convective storm profile in dBZ -->
+              <!-- Cirrus anvil top (-25 to -15 dBZ, blue) -->
+              <path d="M 240 100 Q 380 60 620 90 L 580 140 Q 380 120 280 130 Z" fill="#1e3a8a" opacity="0.8"/>
+              <text x="440" y="85" fill="#93c5fd" font-size="10" font-weight="700" text-anchor="middle">Cirrus Anvil (-20 dBZ)</text>
+
+              <!-- Mid-level cloud (green/yellow, 0 to +10 dBZ) -->
+              <path d="M 320 130 Q 420 110 540 135 L 560 210 Q 420 200 300 210 Z" fill="#047857" opacity="0.85"/>
+              <text x="430" y="155" fill="#a7f3d0" font-size="11" font-weight="700" text-anchor="middle">Mixed Phase Cloud (+5 dBZ)</text>
+
+              <!-- Freezing level Bright Band (spikes to yellow/orange at 4 km) -->
+              <line x1="300" y1="210" x2="560" y2="210" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+              <text x="660" y="214" fill="#fbbf24" font-size="10.5" font-weight="700">★ Melting Layer / Bright Band</text>
+
+              <!-- Heavy precipitation core down to surface (+15 to +20 dBZ, red) -->
+              <path d="M 350 213 L 510 213 L 490 260 L 370 260 Z" fill="#dc2626" opacity="0.9"/>
+              <text x="430" y="242" fill="#fee2e2" font-size="11" font-weight="800" text-anchor="middle">Heavy Rain Core (+18 dBZ)</text>
+
+              <!-- Ground Track X-Axis -->
+              <text x="250" y="285" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">Track km: 0</text>
+              <text x="430" y="285" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">150 km</text>
+              <text x="610" y="285" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">300 km</text>
+              <text x="430" y="308" fill="#e2e8f0" font-size="11.5" font-weight="700" text-anchor="middle">Along-Track Distance (km)</text>
+
+              <!-- dBZ Color Scale Legend -->
+              <g transform="translate(680, 50)">
+                <rect width="160" height="70" fill="#0f172a" stroke="#1e2c44" rx="4"/>
+                <text x="80" y="18" fill="#e2e8f0" font-size="10" font-weight="700" text-anchor="middle">Radar Reflectivity (dBZ)</text>
+                <rect x="15" y="28" width="130" height="12" fill="url(#dbz-grad)" rx="2"/>
+                <text x="15" y="52" fill="#93c5fd" font-size="8.5">-30</text>
+                <text x="55" y="52" fill="#34d399" font-size="8.5">-10</text>
+                <text x="90" y="52" fill="#fbbf24" font-size="8.5">+5</text>
+                <text x="135" y="52" fill="#f43f5e" font-size="8.5">+20</text>
+              </g>
+
+              <defs>
+                <linearGradient id="dbz-grad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#1e3a8a"/>
+                  <stop offset="35%" stop-color="#047857"/>
+                  <stop offset="70%" stop-color="#fbbf24"/>
+                  <stop offset="100%" stop-color="#dc2626"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <div class="recognition-cue-box">
+            <div class="cue-title">🎯 CALIPSO vs. CloudSat: The Classic SciOly Exam Pairing:</div>
+            <ul class="cue-list">
+              <li><strong>CloudSat Radar (CPR):</strong> Uses units of <strong>dBZ</strong> (decibels of reflectivity factor Z). Highly sensitive to large hydrometeors (raindrops, graupel, snowflakes) and penetrates right through deep convective rainstorm cores down to the ground.</li>
+              <li><strong>CALIPSO Lidar (CALIOP):</strong> Uses units of <strong>km⁻¹·sr⁻¹</strong> (attenuated backscatter). Highly sensitive to tiny aerosol particles and optically thin cirrus clouds, but the laser beam is completely extinguished near the top of thick water clouds!</li>
+              <li><strong>The Synergy:</strong> Together, flying 15 seconds apart in the A-Train/C-Train, they produce a complete 3D atmospheric cross-section that neither sensor could capture alone.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 5: LANDSAT CIR & SPECTRAL REFLECTANCE -->
+      <div class="atlas-content" id="atlas-content-landsat" style="display: none;">
+        <div class="atlas-card">
+          <div class="atlas-header">
+            <div>
+              <h3 class="atlas-title">🌿 Landsat 8/9 Color Infrared (CIR) & Spectral Signature Curves</h3>
+              <p class="atlas-subtitle">Why Healthy Vegetation Appears Bright Red in False Color (Bands 5-4-3)</p>
+            </div>
+            <span class="badge badge-emerald">30m Multispectral • Land Cover</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+            In Remote Sensing exams, you will frequently be asked to interpret spectral reflectance curves and false-color composites. 
+            Below is the fundamental <strong>Reflectance Signature Graph</strong> comparing vegetation, soil, water, and snow:
+          </p>
+
+          <div class="atlas-svg-wrap">
+            <svg viewBox="0 0 900 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="900" height="340" fill="#090e18"/>
+
+              <!-- Grid -->
+              <line x1="80" y1="50" x2="860" y2="50" stroke="#1f2937" stroke-dasharray="4 4"/>
+              <line x1="80" y1="105" x2="860" y2="105" stroke="#1f2937" stroke-dasharray="4 4"/>
+              <line x1="80" y1="160" x2="860" y2="160" stroke="#1f2937" stroke-dasharray="4 4"/>
+              <line x1="80" y1="215" x2="860" y2="215" stroke="#1f2937" stroke-dasharray="4 4"/>
+              <line x1="80" y1="270" x2="860" y2="270" stroke="#475569" stroke-width="2"/>
+              <line x1="80" y1="50" x2="80" y2="270" stroke="#475569" stroke-width="2"/>
+
+              <!-- Y Labels (%) -->
+              <text x="70" y="55" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">80%</text>
+              <text x="70" y="110" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">60%</text>
+              <text x="70" y="165" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">40%</text>
+              <text x="70" y="220" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">20%</text>
+              <text x="70" y="275" fill="#9ca3af" font-size="11" text-anchor="end" font-family="monospace">0%</text>
+              <text x="25" y="160" fill="#38bdf8" font-size="12" font-weight="700" transform="rotate(-90 25 160)" text-anchor="middle">Reflectance (%)</text>
+
+              <!-- Bands Background Shading -->
+              <!-- Visible (0.4 - 0.7 µm) -->
+              <rect x="80" y="50" width="120" height="220" fill="rgba(56, 189, 248, 0.05)"/>
+              <text x="140" y="65" fill="#94a3b8" font-size="10" font-weight="700" text-anchor="middle">VISIBLE</text>
+              <!-- NIR (0.7 - 1.1 µm) -->
+              <rect x="200" y="50" width="220" height="220" fill="rgba(16, 185, 129, 0.05)"/>
+              <text x="310" y="65" fill="#34d399" font-size="10" font-weight="700" text-anchor="middle">NEAR-INFRARED (NIR)</text>
+              <!-- SWIR (1.1 - 2.5 µm) -->
+              <rect x="420" y="50" width="440" height="220" fill="rgba(244, 63, 94, 0.05)"/>
+              <text x="640" y="65" fill="#f43f5e" font-size="10" font-weight="700" text-anchor="middle">SHORTWAVE INFRARED (SWIR)</text>
+
+              <!-- 1. HEALTHY GREEN VEGETATION (Emerald green curve with steep Red Edge) -->
+              <path d="M 80 255 
+                       L 110 255 
+                       L 135 240 
+                       L 165 260 
+                       L 190 250 
+                       L 215 110 
+                       L 270 100 
+                       L 340 105 
+                       L 410 130 
+                       L 480 200 
+                       L 550 160 
+                       L 650 220 
+                       L 740 190 
+                       L 840 250" 
+                    fill="none" stroke="#10b981" stroke-width="3.5"/>
+              <text x="250" y="90" fill="#34d399" font-size="11" font-weight="800">Healthy Green Leaf (High NIR Plateau)</text>
+              
+              <!-- Red Edge Annotation Arrow -->
+              <line x1="200" y1="230" x2="200" y2="130" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3 3"/>
+              <text x="180" y="175" fill="#fbbf24" font-size="10.5" font-weight="700" text-anchor="end">Steep Red Edge (0.7 µm) ➔</text>
+
+              <!-- 2. DRY BARE SOIL (Monotonic upward slope, tan/amber curve) -->
+              <path d="M 80 240 L 170 215 L 300 180 L 460 145 L 650 120 L 840 105" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="6 3"/>
+              <text x="740" y="98" fill="#fbbf24" font-size="10.5" font-weight="700">Dry Bare Soil</text>
+
+              <!-- 3. CLEAR OPEN WATER (Drops to zero in NIR, blue curve) -->
+              <path d="M 80 250 L 130 252 L 170 262 L 210 268 L 300 270 L 840 270" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+              <text x="280" y="262" fill="#38bdf8" font-size="10" font-weight="700">Clear Water (Absorbs NIR/SWIR)</text>
+
+              <!-- 4. FRESH SNOW (High visible, collapses in SWIR, white/cyan curve) -->
+              <path d="M 80 60 L 180 65 L 260 75 L 380 90 L 480 250 L 560 260 L 700 265 L 840 268" fill="none" stroke="#e2e8f0" stroke-width="2.5" stroke-dasharray="2 2"/>
+              <text x="320" y="80" fill="#e2e8f0" font-size="10.5" font-weight="700">Fresh Snow (High Visible, Low SWIR)</text>
+
+              <!-- X-Axis Labels -->
+              <text x="80" y="295" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">0.4 µm</text>
+              <text x="200" y="295" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">0.7 (Red Edge)</text>
+              <text x="320" y="295" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">1.0 µm</text>
+              <text x="480" y="295" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">1.5 µm</text>
+              <text x="650" y="295" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">2.0 µm</text>
+              <text x="840" y="295" fill="#9ca3af" font-size="11" text-anchor="middle" font-family="monospace">2.5 µm</text>
+              <text x="470" y="325" fill="#e2e8f0" font-size="12" font-weight="700" text-anchor="middle">Wavelength λ (micrometers, µm)</text>
+            </svg>
+          </div>
+
+          <div class="recognition-cue-box">
+            <div class="cue-title">🎯 Landsat False Color CIR (Bands 5-4-3) Cheat Sheet:</div>
+            <ul class="cue-list">
+              <li><strong>Why Vegetation is Red:</strong> In False Color Infrared (CIR), Band 5 (NIR) is assigned to the RED display channel, Band 4 (Red visible) is assigned to GREEN, and Band 3 (Green visible) is assigned to BLUE. Because healthy leaves have massive NIR reflectance (~50%), they shine <strong>BRIGHT RED</strong> on your screen!</li>
+              <li><strong>Water is Black/Dark:</strong> Water absorbs 100% of Near-Infrared and SWIR radiation, so it appears pitch black or deep navy.</li>
+              <li><strong>Urban / Concrete is Cyan / Silver:</strong> Concrete and bare soil reflect visible blue/green more than vegetation, making cities appear cyan/gray.</li>
+              <li><strong>The Red Edge:</strong> The sharp jump from 5% reflectance at 0.68 µm (chlorophyll absorption) to 50% at 0.75 µm (mesophyll scattering) is the single most tested feature in remote sensing plant biology.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 6: JASON RADAR ALTIMETRY & ENSO -->
+      <div class="atlas-content" id="atlas-content-altimetry" style="display: none;">
+        <div class="atlas-card">
+          <div class="atlas-header">
+            <div>
+              <h3 class="atlas-title">🌊 Jason-3 & Sentinel-6 Radar Altimetry (Sea Surface Height)</h3>
+              <p class="atlas-subtitle">Sea Surface Height (SSH) Anomaly Maps During El Niño vs. La Niña</p>
+            </div>
+            <span class="badge badge-cyan">ACTIVE Radar Altimetry • 1336 km</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+            Radar altimeters measure the height of the sea surface with 1–2 cm accuracy. Thermal expansion makes warmer water rise. 
+            Compare the classic satellite signatures of <strong>El Niño</strong> vs. <strong>La Niña</strong> across the equatorial Pacific:
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 18px; margin: 18px 0;">
+            <!-- El Nino Map Box -->
+            <div style="background: var(--bg-deep); border: 2px solid #ef4444; border-radius: 10px; padding: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="color: #ef4444; font-size: 16px;">🔥 El Niño (Warm Phase) SSH Map</strong>
+                <span class="badge badge-rose">+15 to +25 cm Anomaly</span>
+              </div>
+              <svg viewBox="0 0 400 180" fill="none">
+                <rect width="400" height="180" fill="#0f172a" rx="4"/>
+                <!-- Continents: Asia/Australia left, Americas right -->
+                <path d="M 0 30 Q 50 40 40 100 Q 20 140 0 170 Z" fill="#334155"/>
+                <text x="15" y="90" fill="#94a3b8" font-size="9">Australia</text>
+                <path d="M 400 10 Q 360 40 370 80 Q 350 120 400 160 Z" fill="#334155"/>
+                <text x="375" y="90" fill="#94a3b8" font-size="9" text-anchor="end">S. America</text>
+                <!-- Equatorial line -->
+                <line x1="40" y1="90" x2="360" y2="90" stroke="#475569" stroke-dasharray="3 3"/>
+                <!-- Huge positive SSH bulge spreading to South America (Red/White) -->
+                <ellipse cx="270" cy="90" rx="90" ry="32" fill="url(#elnino-bulge)"/>
+                <text x="270" y="88" fill="#fff" font-size="11" font-weight="800" text-anchor="middle">+20 cm SSH</text>
+                <text x="270" y="102" fill="#fee2e2" font-size="9" text-anchor="middle">Warm Kelvin Wave (Steric Rise)</text>
+                <!-- Western pacific trough (Blue) -->
+                <ellipse cx="90" cy="90" rx="35" ry="20" fill="rgba(59, 130, 246, 0.4)"/>
+                <text x="90" y="93" fill="#93c5fd" font-size="8.5" text-anchor="middle">-10 cm</text>
+                <defs>
+                  <radialGradient id="elnino-bulge" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="40%" stop-color="#ef4444"/>
+                    <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+              </svg>
+              <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 10px; line-height: 1.5;">
+                • Trade winds collapse; warm water surges eastward.<br>
+                • Eastern Pacific thermocline deepens, upwelling shuts down.<br>
+                • Altimeter shows prominent <strong>RED/WHITE positive SSH anomaly</strong> off Ecuador and Peru.
+              </p>
+            </div>
+
+            <!-- La Nina Map Box -->
+            <div style="background: var(--bg-deep); border: 2px solid #3b82f6; border-radius: 10px; padding: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="color: #60a5fa; font-size: 16px;">❄️ La Niña (Cool Phase) SSH Map</strong>
+                <span class="badge badge-cyan">-15 to -20 cm Anomaly</span>
+              </div>
+              <svg viewBox="0 0 400 180" fill="none">
+                <rect width="400" height="180" fill="#0f172a" rx="4"/>
+                <path d="M 0 30 Q 50 40 40 100 Q 20 140 0 170 Z" fill="#334155"/>
+                <text x="15" y="90" fill="#94a3b8" font-size="9">Australia</text>
+                <path d="M 400 10 Q 360 40 370 80 Q 350 120 400 160 Z" fill="#334155"/>
+                <text x="375" y="90" fill="#94a3b8" font-size="9" text-anchor="end">S. America</text>
+                <line x1="40" y1="90" x2="360" y2="90" stroke="#475569" stroke-dasharray="3 3"/>
+                <!-- Cold tongue trough spreading westward from South America (Deep Blue/Purple) -->
+                <ellipse cx="250" cy="90" rx="95" ry="24" fill="url(#lanina-trough)"/>
+                <text x="250" y="88" fill="#fff" font-size="11" font-weight="800" text-anchor="middle">-15 cm SSH</text>
+                <text x="250" y="102" fill="#bfdbfe" font-size="9" text-anchor="middle">Cold Tongue (Upwelling Surge)</text>
+                <!-- Western pacific high (Red) -->
+                <ellipse cx="80" cy="90" rx="30" ry="18" fill="rgba(239, 68, 68, 0.4)"/>
+                <text x="80" y="93" fill="#fca5a5" font-size="8.5" text-anchor="middle">+10 cm</text>
+                <defs>
+                  <radialGradient id="lanina-trough" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#312e81"/>
+                    <stop offset="60%" stop-color="#1d4ed8"/>
+                    <stop offset="100%" stop-color="#1d4ed8" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+              </svg>
+              <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 10px; line-height: 1.5;">
+                • Strong easterly trade winds push water westward.<br>
+                • Intense cold upwelling off Peru creates a steep thermocline.<br>
+                • Altimeter shows prominent <strong>BLUE/PURPLE negative SSH anomaly</strong> across the eastern Pacific.
+              </p>
+            </div>
+          </div>
+
+          <div class="recognition-cue-box">
+            <div class="cue-title">🎯 How to Recognize Altimetry Products on a Test:</div>
+            <ul class="cue-list">
+              <li><strong>Color Bar Centered at Zero:</strong> Ocean altimeter anomaly maps ALWAYS have a color scale centered around <strong>0 cm (or 0 mm)</strong>, representing the long-term mean sea surface.</li>
+              <li><strong>Red = High/Warm; Blue = Low/Cold:</strong> Because seawater expands thermally (steric effect: $\Delta h = eta H \Delta T$), positive height anomalies directly mirror warm subsurface water heat content.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 7: CERES RADIATION BUDGET -->
+      <div class="atlas-content" id="atlas-content-ceres" style="display: none;">
+        <div class="atlas-card">
+          <div class="atlas-header">
+            <div>
+              <h3 class="atlas-title">☀️ CERES Clouds and Earth's Radiant Energy System</h3>
+              <p class="atlas-subtitle">Reflected Shortwave Flux vs. Outgoing Longwave Radiation (OLR) Maps</p>
+            </div>
+            <span class="badge badge-amber">Terra & Aqua • Broadband Radiometer</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+            CERES carries three broadband scanning radiometers measuring the planetary radiation budget at the top of the atmosphere (TOA). 
+            Understanding why clouds look <strong>bright in Reflected Solar</strong> but <strong>dark/cold in Outgoing Longwave</strong> is a fixture of national exams:
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 18px; margin: 18px 0;">
+            <!-- SW Flux Box -->
+            <div style="background: var(--bg-deep); border: 1px solid var(--border-dim); border-radius: 10px; padding: 18px;">
+              <strong style="color: var(--cyan); font-size: 15px;">1. Reflected Shortwave (SW) Flux (W/m²)</strong>
+              <p style="font-size: 12.5px; color: var(--text-muted); margin: 6px 0 12px 0;">Measures reflected sunlight (0.3 to 5.0 µm)</p>
+              <div style="background: #09101d; border-radius: 6px; padding: 14px; font-size: 13px; line-height: 1.6;">
+                • <strong>Bright / High Flux (200 - 350 W/m²):</strong> Thick clouds, Arctic/Antarctic ice sheets, alpine snow (high albedo $lpha pprox 0.6 - 0.9$).<br>
+                • <strong>Dark / Low Flux (<60 W/m²):</strong> Clear open oceans (albedo $lpha pprox 0.06$).
+              </div>
+            </div>
+
+            <!-- LW Flux Box -->
+            <div style="background: var(--bg-deep); border: 1px solid var(--border-dim); border-radius: 10px; padding: 18px;">
+              <strong style="color: var(--rose); font-size: 15px;">2. Outgoing Longwave Radiation (OLR) (W/m²)</strong>
+              <p style="font-size: 12.5px; color: var(--text-muted); margin: 6px 0 12px 0;">Measures emitted terrestrial heat (5.0 to 100+ µm)</p>
+              <div style="background: #09101d; border-radius: 6px; padding: 14px; font-size: 13px; line-height: 1.6;">
+                • <strong>Low Flux (<180 W/m², appears cold/blue):</strong> Deep convective storm cloud tops along the ITCZ and polar ice sheets (cloud tops reach cold upper troposphere ~200 K; by Stefan-Boltzmann $E = \sigma T^4$, cold clouds emit low flux!).<br>
+                • <strong>High Flux (>280 - 320 W/m², appears hot/red):</strong> Midday Sahara/Arabian deserts and warm tropical oceans.
+              </div>
+            </div>
+          </div>
+
+          <div class="recognition-cue-box">
+            <div class="cue-title">🎯 Why do Tropical Storms appear Cold on OLR Maps?</div>
+            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              Students often think storm clouds should emit high heat. In reality, convective storm updrafts push cloud tops up to 12–16 km into the frigid upper troposphere ($T pprox -60^\circ	ext{C} = 213\ 	ext{K}$). 
+              Because emitted blackbody flux scales with the fourth power of temperature ($E = \sigma T^4$), high cloud tops emit very little thermal radiation to space, creating prominent <strong>low-OLR cold spots</strong> on CERES maps!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 8: INTERACTIVE VISUAL RECOGNITION TRAINER -->
+      <div class="atlas-content" id="atlas-content-quiz" style="display: none;">
+        <div class="atlas-card">
+          <div class="atlas-header">
+            <div>
+              <h3 class="atlas-title">🎮 Visual Recognition Flashcard Trainer</h3>
+              <p class="atlas-subtitle">Test Your Ability to Recognize Sensor Graphs, Spectrograms, and Output Products</p>
+            </div>
+            <div style="font-size: 14px; color: var(--text-muted);">
+              Score: <strong id="vquiz-score" style="color: var(--cyan);">0</strong> / <span id="vquiz-total">0</span>
+            </div>
+          </div>
+
+          <div id="vquiz-container" style="margin-top: 16px;">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- ================= SECTION 3: SATELLITES LIBRARY ================= -->
@@ -4793,7 +5590,7 @@ if (typeof window !== "undefined") {
 }
 
 </script>
-  <script>
+<script>
 /**
  * OrbitSense Div C - Application Logic & State Controller
  * Science Olympiad Remote Sensing Master Hub
@@ -6684,6 +7481,216 @@ function updateLiveOrbitWidget() {
   document.getElementById('live-orb-per-val').textContent = periodMin >= 120 ? (periodMin / 60).toFixed(1) + ' hrs' : periodMin.toFixed(1) + ' min';
   document.getElementById('live-orb-vel-val').textContent = velKms.toFixed(2) + ' km/s';
   document.getElementById('live-orb-pass-val').textContent = passes.toFixed(2) + ' rev/day';
+}
+
+// ================= SENSOR & GRAPH ATLAS CONTROLLER =================
+const VISUAL_QUIZ_QUESTIONS = [
+  {
+    id: "vq_1",
+    question: "You are given a 2D vertical atmospheric cross-section with Altitude (0 to 30 km) on the y-axis, latitude on the x-axis, showing thin cirrus clouds at 14 km and Saharan dust at 3 km. What instrument generated this data?",
+    options: [
+      "CALIOP on CALIPSO (Spaceborne Lidar)",
+      "ABI on GOES-16 (Geostationary Imager)",
+      "Poseidon-4 on Sentinel-6 (Radar Altimeter)",
+      "TIRS-2 on Landsat 9 (Thermal Radiometer)"
+    ],
+    correct: 0,
+    explanation: "CALIOP on CALIPSO generates high-resolution vertical curtains of attenuated backscatter up to 30 km using dual-wavelength pulsed lasers (532 nm and 1064 nm)."
+  },
+  {
+    id: "vq_2",
+    question: "In a satellite scene, lush agricultural fields and forests appear vivid bright RED, while open lake water appears pitch black. What band combination is being displayed?",
+    options: [
+      "Natural / True Color (Bands 4, 3, 2 as RGB)",
+      "Color Infrared / CIR False Color (Bands 5, 4, 3 as RGB)",
+      "Shortwave Infrared / Agriculture (Bands 7, 6, 2 as RGB)",
+      "Thermal Infrared Split-Window (Bands 10, 11 as RGB)"
+    ],
+    correct: 1,
+    explanation: "In Color Infrared (CIR), Near-Infrared (Band 5) is mapped to Red. Healthy vegetation reflects 50% of NIR, producing bright red tones. Water absorbs 100% of NIR, appearing black."
+  },
+  {
+    id: "vq_3",
+    question: "An exam image displays three narrow spectrometer absorption windows centered at 0.76 µm, 1.61 µm, and 2.06 µm. What satellite mission is this, and what does it measure?",
+    options: [
+      "CloudSat; Cloud droplet size",
+      "OCO-2; Column-averaged dry air CO2 (XCO2)",
+      "GRACE; Groundwater mass changes",
+      "Sentinel-1; Surface tectonic deformation"
+    ],
+    correct: 1,
+    explanation: "OCO-2's three high-resolution grating spectrometers observe the O2 A-band (0.76 µm), weak CO2 (1.61 µm), and strong CO2 (2.06 µm) to derive XCO2."
+  },
+  {
+    id: "vq_4",
+    question: "A radar profile displays cloud and storm structures using the unit 'dBZ', with a distinctive horizontal line of elevated reflectivity at 4 km altitude. What is this feature?",
+    options: [
+      "An auroral electrojet in the ionosphere",
+      "The Melting Layer / 'Bright Band' where falling snowflakes melt into liquid-coated raindrops",
+      "A reflection off high-voltage power lines",
+      "A software glitch in the satellite receiver"
+    ],
+    correct: 1,
+    explanation: "In CloudSat CPR profiles (dBZ), melting snowflakes develop a film of liquid water, dramatically increasing dielectric reflectivity and creating the iconic 'Bright Band' at the 0°C freezing level."
+  },
+  {
+    id: "vq_5",
+    question: "In an atmospheric transmission spectrum, what is the significance of the high-transmittance plateau between 8 µm and 12 µm?",
+    options: [
+      "It is the Hartley UV ozone shielding band",
+      "It is the Thermal IR Atmospheric Window where Earth's surface heat escapes directly to space and surface temperature is measured",
+      "It is the microwave frequency used for GPS positioning",
+      "It is where nitrogen scatters sunlight via Rayleigh scattering"
+    ],
+    correct: 1,
+    explanation: "The 8–12 µm window is largely transparent to terrestrial longwave radiation. Thermal radiometers (MODIS, GOES) look through this window to measure ground and sea surface temperatures."
+  },
+  {
+    id: "vq_6",
+    question: "An equatorial Pacific altimetry map shows an extensive positive Sea Surface Height anomaly (+15 to +25 cm, colored red/white) spreading eastward toward Ecuador and Peru. What event is this?",
+    options: [
+      "La Niña (Cool Phase)",
+      "El Niño (Warm Phase)",
+      "A tsunami wave train",
+      "Madden-Julian Oscillation dry phase"
+    ],
+    correct: 1,
+    explanation: "During El Niño, collapsed trade winds allow the western warm pool to surge east as Kelvin waves. Because warmer seawater expands thermally (steric rise), radar altimeters record +15 to +25 cm positive SSH anomalies."
+  },
+  {
+    id: "vq_7",
+    question: "On a CERES Outgoing Longwave Radiation (OLR) global map, tropical convective thunderstorm clouds along the ITCZ appear as regions of exceptionally LOW emitted flux (<180 W/m²). Why?",
+    options: [
+      "Storm clouds reflect all geothermal heat into deep space",
+      "Cloud tops reach the frigid upper troposphere (~200 K) and by Stefan-Boltzmann (E = σT⁴), cold surfaces emit very little thermal radiation",
+      "CERES sensors cannot operate over thunderstorms",
+      "Lightning absorbs all thermal photons"
+    ],
+    correct: 1,
+    explanation: "High cloud tops are extremely cold (~200 K). Since blackbody emission scales as T⁴, cold cloud tops emit low OLR, making storms look 'cold' on thermal IR satellite maps."
+  },
+  {
+    id: "vq_8",
+    question: "What is the name of the steep reflectance jump from ~5% at 0.68 µm to ~50% at 0.75 µm in a healthy green leaf spectral curve?",
+    options: [
+      "The Fraunhofer Gap",
+      "The Red Edge",
+      "The Chappuis Absorption Valley",
+      "The Rayleigh Horizon"
+    ],
+    correct: 1,
+    explanation: "The 'Red Edge' occurs at the transition from chlorophyll absorption in the red to vigorous internal scattering by spongy mesophyll cells in the near-infrared."
+  },
+  {
+    id: "vq_9",
+    question: "A satellite product displays monthly changes in 'Equivalent Water Thickness (cm)' over California's Central Valley and Greenland. What satellite measurement is this?",
+    options: [
+      "Lidar range timing from ICESat-2",
+      "Twin-satellite gravimetry distance tracking from GRACE / GRACE-FO",
+      "Microwave brightness temperature from AMSR2",
+      "Visible green reflectance from Landsat"
+    ],
+    correct: 1,
+    explanation: "GRACE and GRACE-FO measure minute gravitational variations to calculate mass changes in equivalent water thickness, tracking aquifer depletion and ice sheet melt."
+  },
+  {
+    id: "vq_10",
+    question: "A satellite map shows dense plumes of tropospheric Nitrogen Dioxide (NO₂) concentrated over urban highways and power plants that dropped by 40% during early 2020 lockdowns. Which sensor produced this?",
+    options: [
+      "CPR on CloudSat",
+      "TROPOMI on Sentinel-5P (or OMI on Aura)",
+      "ATLAS on ICESat-2",
+      "CERES on Terra"
+    ],
+    correct: 1,
+    explanation: "TROPOMI on Copernicus Sentinel-5P and OMI on Aura are the premier spectrometers for mapping daily tropospheric air pollutants including NO₂, SO₂, and methane plumes."
+  }
+];
+
+let vquizIndex = 0;
+let vquizScore = 0;
+let vquizAnswered = new Array(VISUAL_QUIZ_QUESTIONS.length).fill(null);
+
+function switchAtlasSubtab(subtabId, btnElement) {
+  document.querySelectorAll('.atlas-subtab-btn').forEach(b => b.classList.remove('active'));
+  if (btnElement) btnElement.classList.add('active');
+
+  document.querySelectorAll('.atlas-content').forEach(c => c.style.display = 'none');
+  const target = document.getElementById(`atlas-content-${subtabId}`);
+  if (target) {
+    target.style.display = 'block';
+  }
+
+  if (subtabId === 'quiz') {
+    renderVisualQuizQuestion();
+  }
+}
+
+function renderVisualQuizQuestion() {
+  const container = document.getElementById('vquiz-container');
+  const q = VISUAL_QUIZ_QUESTIONS[vquizIndex];
+  const userAns = vquizAnswered[vquizIndex];
+
+  document.getElementById('vquiz-score').textContent = vquizScore;
+  document.getElementById('vquiz-total').textContent = vquizAnswered.filter(a => a !== null).length;
+
+  container.innerHTML = `
+    <div style="background: var(--bg-deep); border: 1px solid var(--border-dim); border-radius: 10px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <span class="badge badge-amber">Question ${vquizIndex + 1} of ${VISUAL_QUIZ_QUESTIONS.length}</span>
+        <span style="font-size: 12px; color: var(--text-muted);">Visual Recognition Drill</span>
+      </div>
+
+      <h4 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 18px; line-height: 1.5;">${q.question}</h4>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px;">
+        ${q.options.map((opt, idx) => `
+          <button class="option-btn ${userAns !== null ? (idx === q.correct ? 'correct' : (idx === userAns ? 'incorrect' : '')) : ''}" 
+            onclick="selectVisualQuizAnswer(${idx})" ${userAns !== null ? 'disabled' : ''}>
+            <div class="option-marker">${['A','B','C','D'][idx]}</div>
+            <div>${opt}</div>
+          </button>
+        `).join('')}
+      </div>
+
+      ${userAns !== null ? `
+        <div style="background: rgba(56, 189, 248, 0.08); border-left: 4px solid var(--cyan); padding: 12px 16px; border-radius: 4px; font-size: 13px; color: #cbd5e1; line-height: 1.5; margin-bottom: 16px;">
+          <strong>Explanation:</strong> ${q.explanation}
+        </div>
+      ` : ''}
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn btn-secondary btn-sm" onclick="prevVisualQuiz()" ${vquizIndex === 0 ? 'disabled' : ''}>← Previous</button>
+        <button class="btn btn-primary btn-sm" onclick="nextVisualQuiz()" ${userAns === null ? 'disabled' : ''}>
+          ${vquizIndex === VISUAL_QUIZ_QUESTIONS.length - 1 ? 'Finish Drill ➔' : 'Next Question →'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function selectVisualQuizAnswer(idx) {
+  if (vquizAnswered[vquizIndex] !== null) return;
+  vquizAnswered[vquizIndex] = idx;
+  const q = VISUAL_QUIZ_QUESTIONS[vquizIndex];
+  if (idx === q.correct) vquizScore++;
+  renderVisualQuizQuestion();
+}
+
+function nextVisualQuiz() {
+  if (vquizIndex < VISUAL_QUIZ_QUESTIONS.length - 1) {
+    vquizIndex++;
+    renderVisualQuizQuestion();
+  } else {
+    alert(`Visual Recognition Quiz Complete! Your Score: ${vquizScore} / ${VISUAL_QUIZ_QUESTIONS.length}`);
+  }
+}
+
+function prevVisualQuiz() {
+  if (vquizIndex > 0) {
+    vquizIndex--;
+    renderVisualQuizQuestion();
+  }
 }
 
 </script>

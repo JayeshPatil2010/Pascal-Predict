@@ -1889,3 +1889,213 @@ function updateLiveOrbitWidget() {
   document.getElementById('live-orb-vel-val').textContent = velKms.toFixed(2) + ' km/s';
   document.getElementById('live-orb-pass-val').textContent = passes.toFixed(2) + ' rev/day';
 }
+
+// ================= SENSOR & GRAPH ATLAS CONTROLLER =================
+const VISUAL_QUIZ_QUESTIONS = [
+  {
+    id: "vq_1",
+    question: "You are given a 2D vertical atmospheric cross-section with Altitude (0 to 30 km) on the y-axis, latitude on the x-axis, showing thin cirrus clouds at 14 km and Saharan dust at 3 km. What instrument generated this data?",
+    options: [
+      "CALIOP on CALIPSO (Spaceborne Lidar)",
+      "ABI on GOES-16 (Geostationary Imager)",
+      "Poseidon-4 on Sentinel-6 (Radar Altimeter)",
+      "TIRS-2 on Landsat 9 (Thermal Radiometer)"
+    ],
+    correct: 0,
+    explanation: "CALIOP on CALIPSO generates high-resolution vertical curtains of attenuated backscatter up to 30 km using dual-wavelength pulsed lasers (532 nm and 1064 nm)."
+  },
+  {
+    id: "vq_2",
+    question: "In a satellite scene, lush agricultural fields and forests appear vivid bright RED, while open lake water appears pitch black. What band combination is being displayed?",
+    options: [
+      "Natural / True Color (Bands 4, 3, 2 as RGB)",
+      "Color Infrared / CIR False Color (Bands 5, 4, 3 as RGB)",
+      "Shortwave Infrared / Agriculture (Bands 7, 6, 2 as RGB)",
+      "Thermal Infrared Split-Window (Bands 10, 11 as RGB)"
+    ],
+    correct: 1,
+    explanation: "In Color Infrared (CIR), Near-Infrared (Band 5) is mapped to Red. Healthy vegetation reflects 50% of NIR, producing bright red tones. Water absorbs 100% of NIR, appearing black."
+  },
+  {
+    id: "vq_3",
+    question: "An exam image displays three narrow spectrometer absorption windows centered at 0.76 µm, 1.61 µm, and 2.06 µm. What satellite mission is this, and what does it measure?",
+    options: [
+      "CloudSat; Cloud droplet size",
+      "OCO-2; Column-averaged dry air CO2 (XCO2)",
+      "GRACE; Groundwater mass changes",
+      "Sentinel-1; Surface tectonic deformation"
+    ],
+    correct: 1,
+    explanation: "OCO-2's three high-resolution grating spectrometers observe the O2 A-band (0.76 µm), weak CO2 (1.61 µm), and strong CO2 (2.06 µm) to derive XCO2."
+  },
+  {
+    id: "vq_4",
+    question: "A radar profile displays cloud and storm structures using the unit 'dBZ', with a distinctive horizontal line of elevated reflectivity at 4 km altitude. What is this feature?",
+    options: [
+      "An auroral electrojet in the ionosphere",
+      "The Melting Layer / 'Bright Band' where falling snowflakes melt into liquid-coated raindrops",
+      "A reflection off high-voltage power lines",
+      "A software glitch in the satellite receiver"
+    ],
+    correct: 1,
+    explanation: "In CloudSat CPR profiles (dBZ), melting snowflakes develop a film of liquid water, dramatically increasing dielectric reflectivity and creating the iconic 'Bright Band' at the 0°C freezing level."
+  },
+  {
+    id: "vq_5",
+    question: "In an atmospheric transmission spectrum, what is the significance of the high-transmittance plateau between 8 µm and 12 µm?",
+    options: [
+      "It is the Hartley UV ozone shielding band",
+      "It is the Thermal IR Atmospheric Window where Earth's surface heat escapes directly to space and surface temperature is measured",
+      "It is the microwave frequency used for GPS positioning",
+      "It is where nitrogen scatters sunlight via Rayleigh scattering"
+    ],
+    correct: 1,
+    explanation: "The 8–12 µm window is largely transparent to terrestrial longwave radiation. Thermal radiometers (MODIS, GOES) look through this window to measure ground and sea surface temperatures."
+  },
+  {
+    id: "vq_6",
+    question: "An equatorial Pacific altimetry map shows an extensive positive Sea Surface Height anomaly (+15 to +25 cm, colored red/white) spreading eastward toward Ecuador and Peru. What event is this?",
+    options: [
+      "La Niña (Cool Phase)",
+      "El Niño (Warm Phase)",
+      "A tsunami wave train",
+      "Madden-Julian Oscillation dry phase"
+    ],
+    correct: 1,
+    explanation: "During El Niño, collapsed trade winds allow the western warm pool to surge east as Kelvin waves. Because warmer seawater expands thermally (steric rise), radar altimeters record +15 to +25 cm positive SSH anomalies."
+  },
+  {
+    id: "vq_7",
+    question: "On a CERES Outgoing Longwave Radiation (OLR) global map, tropical convective thunderstorm clouds along the ITCZ appear as regions of exceptionally LOW emitted flux (<180 W/m²). Why?",
+    options: [
+      "Storm clouds reflect all geothermal heat into deep space",
+      "Cloud tops reach the frigid upper troposphere (~200 K) and by Stefan-Boltzmann (E = σT⁴), cold surfaces emit very little thermal radiation",
+      "CERES sensors cannot operate over thunderstorms",
+      "Lightning absorbs all thermal photons"
+    ],
+    correct: 1,
+    explanation: "High cloud tops are extremely cold (~200 K). Since blackbody emission scales as T⁴, cold cloud tops emit low OLR, making storms look 'cold' on thermal IR satellite maps."
+  },
+  {
+    id: "vq_8",
+    question: "What is the name of the steep reflectance jump from ~5% at 0.68 µm to ~50% at 0.75 µm in a healthy green leaf spectral curve?",
+    options: [
+      "The Fraunhofer Gap",
+      "The Red Edge",
+      "The Chappuis Absorption Valley",
+      "The Rayleigh Horizon"
+    ],
+    correct: 1,
+    explanation: "The 'Red Edge' occurs at the transition from chlorophyll absorption in the red to vigorous internal scattering by spongy mesophyll cells in the near-infrared."
+  },
+  {
+    id: "vq_9",
+    question: "A satellite product displays monthly changes in 'Equivalent Water Thickness (cm)' over California's Central Valley and Greenland. What satellite measurement is this?",
+    options: [
+      "Lidar range timing from ICESat-2",
+      "Twin-satellite gravimetry distance tracking from GRACE / GRACE-FO",
+      "Microwave brightness temperature from AMSR2",
+      "Visible green reflectance from Landsat"
+    ],
+    correct: 1,
+    explanation: "GRACE and GRACE-FO measure minute gravitational variations to calculate mass changes in equivalent water thickness, tracking aquifer depletion and ice sheet melt."
+  },
+  {
+    id: "vq_10",
+    question: "A satellite map shows dense plumes of tropospheric Nitrogen Dioxide (NO₂) concentrated over urban highways and power plants that dropped by 40% during early 2020 lockdowns. Which sensor produced this?",
+    options: [
+      "CPR on CloudSat",
+      "TROPOMI on Sentinel-5P (or OMI on Aura)",
+      "ATLAS on ICESat-2",
+      "CERES on Terra"
+    ],
+    correct: 1,
+    explanation: "TROPOMI on Copernicus Sentinel-5P and OMI on Aura are the premier spectrometers for mapping daily tropospheric air pollutants including NO₂, SO₂, and methane plumes."
+  }
+];
+
+let vquizIndex = 0;
+let vquizScore = 0;
+let vquizAnswered = new Array(VISUAL_QUIZ_QUESTIONS.length).fill(null);
+
+function switchAtlasSubtab(subtabId, btnElement) {
+  document.querySelectorAll('.atlas-subtab-btn').forEach(b => b.classList.remove('active'));
+  if (btnElement) btnElement.classList.add('active');
+
+  document.querySelectorAll('.atlas-content').forEach(c => c.style.display = 'none');
+  const target = document.getElementById(`atlas-content-${subtabId}`);
+  if (target) {
+    target.style.display = 'block';
+  }
+
+  if (subtabId === 'quiz') {
+    renderVisualQuizQuestion();
+  }
+}
+
+function renderVisualQuizQuestion() {
+  const container = document.getElementById('vquiz-container');
+  const q = VISUAL_QUIZ_QUESTIONS[vquizIndex];
+  const userAns = vquizAnswered[vquizIndex];
+
+  document.getElementById('vquiz-score').textContent = vquizScore;
+  document.getElementById('vquiz-total').textContent = vquizAnswered.filter(a => a !== null).length;
+
+  container.innerHTML = `
+    <div style="background: var(--bg-deep); border: 1px solid var(--border-dim); border-radius: 10px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <span class="badge badge-amber">Question ${vquizIndex + 1} of ${VISUAL_QUIZ_QUESTIONS.length}</span>
+        <span style="font-size: 12px; color: var(--text-muted);">Visual Recognition Drill</span>
+      </div>
+
+      <h4 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 18px; line-height: 1.5;">${q.question}</h4>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px;">
+        ${q.options.map((opt, idx) => `
+          <button class="option-btn ${userAns !== null ? (idx === q.correct ? 'correct' : (idx === userAns ? 'incorrect' : '')) : ''}" 
+            onclick="selectVisualQuizAnswer(${idx})" ${userAns !== null ? 'disabled' : ''}>
+            <div class="option-marker">${['A','B','C','D'][idx]}</div>
+            <div>${opt}</div>
+          </button>
+        `).join('')}
+      </div>
+
+      ${userAns !== null ? `
+        <div style="background: rgba(56, 189, 248, 0.08); border-left: 4px solid var(--cyan); padding: 12px 16px; border-radius: 4px; font-size: 13px; color: #cbd5e1; line-height: 1.5; margin-bottom: 16px;">
+          <strong>Explanation:</strong> ${q.explanation}
+        </div>
+      ` : ''}
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn btn-secondary btn-sm" onclick="prevVisualQuiz()" ${vquizIndex === 0 ? 'disabled' : ''}>← Previous</button>
+        <button class="btn btn-primary btn-sm" onclick="nextVisualQuiz()" ${userAns === null ? 'disabled' : ''}>
+          ${vquizIndex === VISUAL_QUIZ_QUESTIONS.length - 1 ? 'Finish Drill ➔' : 'Next Question →'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function selectVisualQuizAnswer(idx) {
+  if (vquizAnswered[vquizIndex] !== null) return;
+  vquizAnswered[vquizIndex] = idx;
+  const q = VISUAL_QUIZ_QUESTIONS[vquizIndex];
+  if (idx === q.correct) vquizScore++;
+  renderVisualQuizQuestion();
+}
+
+function nextVisualQuiz() {
+  if (vquizIndex < VISUAL_QUIZ_QUESTIONS.length - 1) {
+    vquizIndex++;
+    renderVisualQuizQuestion();
+  } else {
+    alert(`Visual Recognition Quiz Complete! Your Score: ${vquizScore} / ${VISUAL_QUIZ_QUESTIONS.length}`);
+  }
+}
+
+function prevVisualQuiz() {
+  if (vquizIndex > 0) {
+    vquizIndex--;
+    renderVisualQuizQuestion();
+  }
+}
