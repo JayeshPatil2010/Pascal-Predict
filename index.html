@@ -56,6 +56,14 @@
       </nav>
 
       <div class="nav-actions">
+        <a href="OrbitSense_Remote_Sensing_Div_C_Package.zip" download="OrbitSense_Remote_Sensing_Div_C_Package.zip" class="btn-print-nav" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: var(--cyan); text-decoration: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download Package (.zip)
+        </a>
         <button class="btn-print-nav" onclick="printCheatSheet()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="6 9 6 2 18 2 18 9"></polyline>
@@ -645,8 +653,11 @@
           Formatted for print / export. High-density reference tables with core constants, master equations, 
           TI-84 keystrokes, satellite specifications, sensor bands, and climate cycles.
         </p>
-        <div style="margin-top: 14px;">
-          <button class="btn btn-primary" onclick="printCheatSheet()">🖨️ Print / Save as PDF</button>
+        <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="OrbitSense_Remote_Sensing_Div_C_Package.zip" download="OrbitSense_Remote_Sensing_Div_C_Package.zip" class="btn btn-primary" style="text-decoration: none;">
+            📦 Download Offline Study Package (.zip)
+          </a>
+          <button class="btn btn-secondary" onclick="printCheatSheet()">🖨️ Print / Save as PDF</button>
         </div>
       </div>
 

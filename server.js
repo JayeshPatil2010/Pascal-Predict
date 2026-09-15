@@ -17,7 +17,9 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon',
   '.webp': 'image/webp',
   '.pdf': 'application/pdf',
-  '.txt': 'text/plain; charset=utf-8'
+  '.txt': 'text/plain; charset=utf-8',
+  '.zip': 'application/zip',
+  '.md': 'text/markdown; charset=utf-8'
 };
 
 const server = http.createServer((req, res) => {
