@@ -128,3 +128,44 @@ footer{border-top:1px solid var(--line);padding:18px 18px 40px}
   .eq,#cheat-dso table,.card{border-color:#999;background:#fff}
   .eqn,.eqname,.equ,.eqt,li,p,td{color:#000}
 }
+
+/* ---------- guided course ---------- */
+.cprogress{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0 18px}
+.cbar{height:10px;background:#1b2542;border-radius:6px;overflow:hidden}
+.cbar span{display:block;height:100%;background:linear-gradient(90deg,#5cc8ff,#ffc454,#4ade80);transition:width .3s}
+.clabel{margin:8px 0 10px;font-size:14px}
+.clabel .note{display:block;font-size:12.5px;margin-top:2px}
+.trackhead{margin:22px 0 8px;font-size:15px;color:var(--acc2);text-transform:uppercase;letter-spacing:.8px;
+  border-bottom:1px solid var(--line);padding-bottom:6px}
+.trackhead .note{text-transform:none;letter-spacing:0;color:var(--dim);font-size:12.5px}
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.stage{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px;cursor:pointer;transition:.15s}
+.stage:hover{border-color:#4a5f96;transform:translateY(-1px)}
+.stage.locked{opacity:.45;cursor:not-allowed}
+.stage.done{border-color:#1f6b45}
+.sno{flex:0 0 30px;height:30px;border-radius:8px;background:#1d2b4d;color:var(--acc);
+  display:flex;align-items:center;justify-content:center;font-weight:700}
+.stage.done .sno{background:#12402a;color:var(--good)}
+.stitle{font-weight:700;font-size:15px;margin-bottom:3px}
+.stitlebig{font-size:21px}
+.tick{color:var(--good);font-size:12.5px;font-weight:600}
+.lock{color:var(--dim);font-size:12.5px;font-weight:400}
+.sgoal{color:var(--dim);font-size:13.5px}
+.sgoal.big{font-size:15px;color:#cfe0ff;margin:0 0 14px}
+.smeta{color:#7c8bb5;font-size:12px;margin-top:5px}
+.flashwarn{background:#3a2b12;border:1px solid #7a5a1f;color:#ffd9a0;border-radius:10px;
+  padding:10px 14px;margin-bottom:12px;font-size:14px}
+.stageview{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.toprow{align-items:center;gap:12px;margin:0 0 6px}
+.teach{background:#101a30;border:1px solid var(--line);border-radius:12px;padding:4px 18px 14px;margin:8px 0 16px}
+.teach li{margin-bottom:8px;line-height:1.5}
+.gallery{margin:16px 0}
+.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.gal figure{margin:0;background:#0b1020;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.gal img{width:100%;height:150px;object-fit:cover;display:block;background:#05070f}
+.gal figcaption{padding:8px 10px;font-size:12.5px}
+.gal figcaption span{color:var(--dim)}
+.checks{margin-top:8px}
+.checkq{background:#101a30;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.checkq .bigq{font-size:16px;margin:4px 0 10px}

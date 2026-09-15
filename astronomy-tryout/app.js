@@ -501,6 +501,155 @@ function renderEq() {
 }
 
 /* ============================================================
+   6. GUIDED COURSE — basics -> advanced, gated by mastery
+   ============================================================ */
+S.course = S.course || {};
+S.openAll = S.openAll || false;
+let curStage = null;
+
+function stageUnlocked(i) {
+  if (S.openAll) return true;
+  if (i === 0) return true;
+  const prev = COURSE[i - 1];
+  return !!(S.course[prev.id] && S.course[prev.id].done);
+}
+const passedCount = () => COURSE.filter(st => S.course[st.id] && S.course[st.id].done).length;
+
+function renderCourse() {
+  const pct = Math.round(100 * passedCount() / COURSE.length);
+  let html = `
+    <div class="cprogress">
+      <div class="cbar"><span style="width:${pct}%"></span></div>
+      <div class="clabel"><b>${passedCount()} / ${COURSE.length} stages passed</b>
+        <span class="note">Pass = 3 of 4 (or 4 of 5) check questions. ${S.openAll ? "" : "Each stage unlocks the next."}</span></div>
+      <div class="row">
+        <button class="primary" id="c-resume">${passedCount() ? "Continue where I left off" : "Start with Stage 1"}</button>
+        <button class="ghost" id="c-openall">${S.openAll ? "🔒 Re-lock stages" : "⚡ Cram mode: unlock everything"}</button>
+        <button class="ghost" id="c-reset">Reset course progress</button>
+      </div>
+    </div>`;
+  TRACKS.forEach(tr => {
+    const stages = COURSE.map((st, i) => ({ st, i })).filter(x => x.st.track === tr.id);
+    html += `<h3 class="trackhead">${tr.name} <span class="note">${tr.sub}</span></h3><div class="stages">`;
+    stages.forEach(({ st, i }) => {
+      const rec = S.course[st.id], open = stageUnlocked(i);
+      const state = rec && rec.done ? "done" : (open ? (rec ? "retry" : "open") : "locked");
+      html += `
+        <div class="stage ${state}" data-stage="${st.id}">
+          <div class="sno">${i + 1}</div>
+          <div class="sinfo">
+            <div class="stitle">${st.title} ${state === "done" ? '<span class="tick">✓ ' + rec.best + "/" + st.check.length + "</span>" : ""}
+              ${state === "locked" ? '<span class="lock">🔒 locked</span>' : ""}</div>
+            <div class="sgoal">${st.goal}</div>
+            <div class="smeta">${st.mins} min · ${st.check.length} check questions</div>
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById("course").innerHTML = html;
+  document.querySelectorAll(".stage").forEach(el => el.onclick = () => {
+    const id = el.dataset.stage, idx = COURSE.findIndex(x => x.id === id);
+    if (!stageUnlocked(idx)) { flashLocked(); return; }
+    openStage(id);
+  });
+  const nextIdx = COURSE.findIndex((st, i) => !S.course[st.id] || !S.course[st.id].done);
+  document.getElementById("c-resume").onclick = () => openStage(COURSE[nextIdx < 0 ? 0 : nextIdx].id);
+  document.getElementById("c-openall").onclick = () => { S.openAll = !S.openAll; save(); renderCourse(); };
+  document.getElementById("c-reset").onclick = () => {
+    if (confirm("Clear course progress only?")) { S.course = {}; S.openAll = false; save(); renderCourse(); }
+  };
+}
+function flashLocked() {
+  const n = document.createElement("div");
+  n.className = "flashwarn"; n.textContent = "Pass the previous stage first — or hit 'Cram mode' to unlock everything.";
+  document.getElementById("course").prepend(n);
+  setTimeout(() => n.remove(), 2600);
+}
+
+function openStage(id) {
+  const st = COURSE.find(x => x.id === id), i = COURSE.indexOf(st);
+  curStage = st;
+  const rec = S.course[id] || {};
+  document.getElementById("course").innerHTML = `
+    <div class="stageview">
+      <div class="row toprow">
+        <button class="ghost" id="s-back">← All stages</button>
+        <span class="note">Stage ${i + 1} of ${COURSE.length} · ${TRACKS.find(t => t.id === st.track).name} · ~${st.mins} min
+        ${rec.done ? " · ✓ passed " + rec.best + "/" + st.check.length : ""}</span>
+      </div>
+      <h2 class="stitlebig">${st.title}</h2>
+      <p class="sgoal big">🎯 ${st.goal}</p>
+      <div class="teach">
+        <h4>Learn</h4>
+        <ul>${st.teach.map(t => `<li>${t}</li>`).join("")}</ul>
+      </div>
+      ${st.gallery ? `<div class="gallery"><h4>Recognize these</h4><div class="gal">${st.gallery.map(gid => {
+        const d = DSO.find(x => x.id === gid);
+        return `<figure><img src="${d.img}" alt="${esc(d.name)}" loading="lazy"><figcaption><b>${d.name}</b><br><span>${d.idCues[0]}</span></figcaption></figure>`;
+      }).join("")}</div></div>` : ""}
+      <div class="checks" id="checks">
+        <h4>Check yourself</h4>
+        ${st.check.map((c, k) => `
+          <div class="checkq" data-k="${k}">
+            <p class="bigq">${k + 1}. ${c.q}</p>
+            <div class="opts">${shuffle(c.opts).map(o => `<button class="opt">${o}</button>`).join("")}</div>
+            <div class="chkfb"></div>
+          </div>`).join("")}
+        <div class="row"><button class="primary" id="s-grade">Grade this stage</button></div>
+        <div id="s-result" class="fb"></div>
+      </div>
+      ${st.link ? `<div class="row"><button class="ghost" id="s-link">${st.link.text}</button></div>` : ""}
+    </div>`;
+  document.getElementById("s-back").onclick = renderCourse;
+  if (st.link) document.getElementById("s-link").onclick = () => document.querySelector('[data-tab="' + st.link.tab + '"]').click();
+  document.querySelectorAll("#checks .opt").forEach(b => {
+    b.onclick = () => {
+      const box = b.closest(".checkq");
+      if (box.dataset.answered) return;
+      box.dataset.answered = "1";
+      const c = st.check[+box.dataset.k];
+      const ok = b.textContent.trim() === c.ans;
+      box.dataset.ok = ok ? "1" : "0";
+      b.classList.add(ok ? "good" : "bad");
+      box.querySelectorAll(".opt").forEach(o => { if (o.textContent.trim() === c.ans) o.classList.add("good"); });
+      box.querySelector(".chkfb").innerHTML = `<div class="${ok ? "ok" : "no"}">${ok ? "Correct" : "Not quite — " + c.ans}</div><div class="recap">${c.exp}</div>`;
+    };
+  });
+  document.getElementById("s-grade").onclick = () => gradeStage(st);
+  window.scrollTo(0, 0);
+}
+
+function gradeStage(st) {
+  const boxes = [...document.querySelectorAll("#checks .checkq")];
+  const answered = boxes.filter(b => b.dataset.answered);
+  if (answered.length < boxes.length) {
+    document.getElementById("s-result").innerHTML = `<div class="no">Answer all ${boxes.length} questions first (${answered.length} done).</div>`;
+    return;
+  }
+  const score = boxes.filter(b => b.dataset.ok === "1").length;
+  const need = boxes.length === 5 ? 4 : 3;
+  const pass = score >= need;
+  const i = COURSE.indexOf(st), next = COURSE[i + 1];
+  const prevBest = S.course[st.id] ? S.course[st.id].best : 0;
+  S.course[st.id] = { done: pass || !!(S.course[st.id] && S.course[st.id].done), best: Math.max(prevBest, score), tries: (S.course[st.id] ? S.course[st.id].tries : 0) + 1 };
+  save();
+  document.getElementById("s-result").innerHTML = `
+    <div class="${pass ? "ok" : "no"}">${score} / ${boxes.length} — ${pass ? "passed ✓" : "not yet: you need " + need + "/" + boxes.length}</div>
+    <div class="recap">${pass
+      ? (next ? `<b>${next.title}</b> is now unlocked.` : "That was the last stage — go run the Diagnostic and the DSO Trainer.")
+      : "Re-read the Learn bullets you missed above, then try again. Explanations are under each question."}</div>
+    <div class="row">
+      ${next && pass ? `<button class="primary" id="s-next">Next: ${next.title} →</button>` : ""}
+      ${pass ? `<button class="ghost" id="s-back2">← Back to all stages</button>` : `<button class="ghost" id="s-retry">↻ Try this stage again</button>`}
+    </div>`;
+  if (next && pass) document.getElementById("s-next").onclick = () => openStage(next.id);
+  const b2 = document.getElementById("s-back2"); if (b2) b2.onclick = renderCourse;
+  const rt = document.getElementById("s-retry"); if (rt) rt.onclick = () => openStage(st.id);
+  document.getElementById("s-result").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+/* ============================================================
    6. PRINTABLE DSO TABLE
    ============================================================ */
 function renderCheat() {
@@ -514,7 +663,7 @@ function renderCheat() {
 /* ============================================================
    boot
    ============================================================ */
-renderModules(); renderDsoCards(); renderEq(); renderCheat();
+renderModules(); renderDsoCards(); renderEq(); renderCheat(); renderCourse();
 newDsoRound(); newGraphQ(); startDiag("rand"); startCards();
 document.getElementById("g-new").onclick = newGraphQ;
 document.getElementById("reset").onclick = () => { if (confirm("Clear all your progress?")) { localStorage.removeItem(STORE_KEY); location.reload(); } };

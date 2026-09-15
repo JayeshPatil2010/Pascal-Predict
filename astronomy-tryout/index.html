@@ -12,7 +12,8 @@
     <h1>Astronomy C · Cram Deck</h1>
     <p class="sub">Stellar evolution in normal &amp; starburst galaxies · 2027 rules §3.a/§3.b/§3.c · built for a no-binder tryout</p>
     <nav>
-      <button data-tab="plan" class="active">Plan</button>
+      <button data-tab="guided" class="active">🎓 Guided Course</button>
+      <button data-tab="plan">Plan</button>
       <button data-tab="diag">Diagnostic</button>
       <button data-tab="learn">Learn</button>
       <button data-tab="dso">DSO Trainer</button>
@@ -26,7 +27,14 @@
 <main class="wrap">
 
 <!-- ============ PLAN ============ -->
-<section class="panel active" id="tab-plan">
+<section class="panel active" id="tab-guided">
+  <h2>Guided Course — basics first, advanced last</h2>
+  <p class="lead">19 stages in 4 parts. Each one teaches you something short, then checks you on it.
+  Score 3 of 4 (or 4 of 5) to unlock the next stage. In a hurry? Hit <b>Cram mode</b> to unlock everything at once.</p>
+  <div id="course"></div>
+</section>
+
+<section class="panel" id="tab-plan">
   <div class="callout">
     <b>First, check the topic.</b> The 2027 rules are a different event from 2026: it is no longer
     "formation → destruction" of a single star. It is <b>stellar evolution in normal &amp; starburst
@@ -163,6 +171,7 @@
 
 <script src="data-dso.js"></script>
 <script src="data-learn.js"></script>
+<script src="data-course.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
